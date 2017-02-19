@@ -9,6 +9,7 @@ dependencies:
     - _build
   pre:
     - ./scripts/install_elixir.sh
+    - mix local.hex --force
   override:
     - yes | mix deps.get
     - mix deps.compile
@@ -16,5 +17,5 @@ dependencies:
 
 test:
   override:
-    - mix credo
+    - mix credo --strict
     - mix test
