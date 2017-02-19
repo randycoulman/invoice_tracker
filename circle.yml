@@ -10,6 +10,7 @@ dependencies:
   pre:
     - ./scripts/install_elixir.sh
     - mix local.hex --force
+    - mix local.rebar --force
   override:
     - yes | mix deps.get
     - mix deps.compile
