@@ -1,0 +1,20 @@
+machine:
+  environment:
+    PATH: "$HOME/.asdf/bin:$HOME/.asdf/shims:$PATH"
+
+dependencies:
+  cache_directories:
+    - ~/.asdf
+    - deps
+    - _build
+  pre:
+    - ./scripts/install_elixir.sh
+  override:
+    - yes | mix deps.get
+    - mix deps.compile
+    - mix compile
+
+test:
+  override:
+    - mix credo
+    - mix test
