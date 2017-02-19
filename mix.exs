@@ -5,6 +5,7 @@ defmodule Invoice.Mixfile do
     [app: :invoice,
      version: "0.1.0",
      elixir: "~> 1.4",
+     escript: [main_module: Invoice.CLI],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -29,6 +30,7 @@ defmodule Invoice.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
+      {:ex_cli, "~> 0.1.0"},
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
