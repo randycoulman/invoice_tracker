@@ -22,7 +22,7 @@ defmodule FeatureTest do
   defp record_invoice(number, amount, date) do
     IO.puts System.cwd
     {output, 0} = System.cmd Path.expand("./invoice"),
-      ["record", number, amount, date]
+      ["record", number, amount, "--date", date]
     output
   end
 end

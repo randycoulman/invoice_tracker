@@ -17,7 +17,10 @@ defmodule Invoice.CLI do
 
     argument :number, type: :integer
     argument :amount, type: :float
-    argument :date
+    option :date,
+      help: "The invoice date",
+      aliases: [:d],
+      required: true
 
     run context do
       %{number: number, date: date, amount: amount} = context
