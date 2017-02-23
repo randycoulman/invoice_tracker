@@ -30,6 +30,7 @@ defmodule Invoice.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
+      {:briefly, "~> 0.3", only: :test},
       {:ex_cli, "~> 0.1.0"},
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}

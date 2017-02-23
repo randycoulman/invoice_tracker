@@ -5,12 +5,12 @@ defmodule FeatureTest do
 
   setup_all do
     {_, 0} = System.cmd "mix", ["escript.build"]
-    :ok
+    [file: Briefly.create!]
   end
 
   describe "recording an invoice" do
-    setup do
-      output = record_invoice("42", "1298.45", "2017-02-16")
+    setup %{file: file} do
+      output = record_invoice(file, "42", "1298.45", "2017-02-16")
       [output: output]
     end
 
@@ -19,10 +19,9 @@ defmodule FeatureTest do
     end
   end
 
-  defp record_invoice(number, amount, date) do
-    IO.puts System.cwd
+  defp record_invoice(file, number, amount, date) do
     {output, 0} = System.cmd Path.expand("./invoice"),
-      ["record", number, amount, "--date", date]
+      ["--file", file, "record", number, amount, "--date", date]
     output
   end
 end

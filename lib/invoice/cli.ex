@@ -12,6 +12,11 @@ defmodule Invoice.CLI do
   paid and unpaid invoices.
   """
 
+  option :file,
+    help: "The invoice data file to use",
+    aliases: [:f],
+    required: true
+
   command :record do
     description "Records an invoice"
 
