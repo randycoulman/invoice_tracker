@@ -1,18 +1,11 @@
 defmodule InvoiceTracker do
   @moduledoc """
-  Documentation for InvoiceTracker.
+  Track invoices and payments.
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> InvoiceTracker.hello
-      :world
-
+  Record an invoice.
   """
-  def hello do
-    :world
-  end
+  @spec record(Repo.t, Invoice.t) :: :ok
+  def record(repo, invoice), do: repo.store(invoice)
 end

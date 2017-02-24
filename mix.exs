@@ -33,7 +33,8 @@ defmodule InvoiceTracker.Mixfile do
       {:briefly, "~> 0.3", only: :test},
       {:ex_cli, "~> 0.1.0"},
       {:credo, "~> 0.6", only: [:dev, :test]},
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
+      {:mock, "~> 0.2", only: :test}
     ]
   end
 end
