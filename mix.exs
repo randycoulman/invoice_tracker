@@ -1,11 +1,11 @@
-defmodule Invoice.Mixfile do
+defmodule InvoiceTracker.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :invoice,
+    [app: :invoice_tracker,
      version: "0.1.0",
      elixir: "~> 1.4",
-     escript: [main_module: Invoice.CLI],
+     escript: [main_module: InvoiceTracker.CLI, name: "invoice"],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]

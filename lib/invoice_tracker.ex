@@ -1,6 +1,6 @@
-defmodule Invoice do
+defmodule InvoiceTracker do
   @moduledoc """
-  Documentation for Invoice.
+  Documentation for InvoiceTracker.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Invoice do
 
   ## Examples
 
-      iex> Invoice.hello
+      iex> InvoiceTracker.hello
       :world
 
   """

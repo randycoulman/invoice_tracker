@@ -1,4 +1,4 @@
-defmodule Invoice.CLI do
+defmodule InvoiceTracker.CLI do
   @moduledoc """
   Defines the command-line interface
   """

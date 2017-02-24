@@ -1,6 +1,6 @@
-# invoice
+# InvoiceTracker
 
-Command-line application for managing invoices.
+Command-line application for tracking and reporting on invoices and payments.
 
 ## Introduction
 
