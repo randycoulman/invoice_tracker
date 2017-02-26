@@ -7,7 +7,7 @@ defmodule InvoiceTracker.Repo do
 
   alias InvoiceTracker.Invoice
 
-  @type table_factory :: (() -> :ets.tid())
+  @type table_factory :: (() -> {Module.t, term})
 
   @spec start_link(table_factory) :: Agent.onstart()
   def start_link(factory) do
@@ -20,13 +20,13 @@ defmodule InvoiceTracker.Repo do
   @spec find(integer) :: {:ok, Invoice.t} | {:error, atom}
   def find(number), do: Agent.get(@agent, &do_find(&1, number))
 
-  defp do_store(table, invoice) do
-    :ets.insert(table, {key(invoice), invoice})
-    table
+  defp do_store({storage, table}, invoice) do
+    storage.insert(table, {key(invoice), invoice})
+    {storage, table}
   end
 
-  defp do_find(table, number) do
-    case :ets.lookup(table, number) do
+  defp do_find({storage, table}, number) do
+    case storage.lookup(table, number) do
       [] -> {:error, :no_such_invoice}
       [{_, invoice}] -> {:ok, invoice}
     end

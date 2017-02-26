@@ -5,6 +5,9 @@ defmodule InvoiceTracker.CLI do
 
   use ExCLI.DSL, escript: true
 
+  alias InvoiceTracker.Invoice
+  alias InvoiceTracker.Repo
+
   name "invoice"
   description "Invoice tracker"
   long_description ~s"""
@@ -28,8 +31,19 @@ defmodule InvoiceTracker.CLI do
       required: true
 
     run context do
-      %{number: number, date: date, amount: amount} = context
-      IO.puts("Recorded invoice ##{number} on #{date} for $#{amount}")
+      start_repo(context)
+      invoice = struct(Invoice, context)
+      InvoiceTracker.record(Repo, invoice)
+      IO.puts("Recorded invoice #{invoice}")
     end
+  end
+
+  defp start_repo(context) do
+    Repo.start_link(fn -> {:dets, table(context)} end)
+  end
+
+  defp table(context) do
+    {:ok, table} = :dets.open_file(context.file, [access: :read_write])
+    table
   end
 end

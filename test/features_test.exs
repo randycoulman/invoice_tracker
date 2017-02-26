@@ -5,16 +5,18 @@ defmodule FeatureTest do
 
   setup_all do
     {_, 0} = System.cmd "mix", ["escript.build"]
-    [file: Briefly.create!]
+    :ok
   end
 
   describe "recording an invoice" do
-    setup %{file: file} do
+    setup do
+      path = Briefly.create!(directory: true)
+      file = Path.join(path, "invoices.ets")
       output = record_invoice(file, "42", "1298.45", "2017-02-16")
       [output: output]
     end
 
-    test "it reports that the invoice was recorded", %{output: output} do
+    test "reports that the invoice was recorded", %{output: output} do
       assert output == "Recorded invoice #42 on 2017-02-16 for $1298.45\n"
     end
   end

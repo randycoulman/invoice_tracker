@@ -6,7 +6,7 @@ defmodule RepoTest do
   alias InvoiceTracker.Repo
 
   setup do
-    Repo.start_link(fn -> :ets.new(__MODULE__, []) end)
+    Repo.start_link(fn -> {:ets, :ets.new(__MODULE__, [])} end)
     :ok
   end
 
