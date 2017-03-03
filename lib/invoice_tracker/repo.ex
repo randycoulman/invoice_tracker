@@ -5,9 +5,16 @@ defmodule InvoiceTracker.Repo do
 
   @agent __MODULE__
 
-  alias InvoiceTracker.Invoice
+  def start_link_in_memory do
+    start_link(fn -> {:ets, :ets.new(__MODULE__, [])} end)
+  end
 
-  def start_link(factory) do
+  def start_link_with_file(filename) do
+    {:ok, table} = :dets.open_file(filename, [access: :read_write])
+    start_link(fn -> {:dets, table} end)
+  end
+
+  defp start_link(factory) do
     Agent.start_link(factory, name: @agent)
   end
 

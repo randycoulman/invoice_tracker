@@ -2,11 +2,10 @@ defmodule RepoTest do
   @moduledoc false
 
   use ExUnit.Case
-  alias InvoiceTracker.Invoice
-  alias InvoiceTracker.Repo
+  alias InvoiceTracker.{Invoice, Repo}
 
   setup do
-    Repo.start_link(fn -> {:ets, :ets.new(__MODULE__, [])} end)
+    Repo.start_link_in_memory()
     :ok
   end
 

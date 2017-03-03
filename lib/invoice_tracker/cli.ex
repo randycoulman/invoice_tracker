@@ -5,8 +5,7 @@ defmodule InvoiceTracker.CLI do
 
   use ExCLI.DSL, escript: true
 
-  alias InvoiceTracker.Invoice
-  alias InvoiceTracker.Repo
+  alias InvoiceTracker.{Invoice, Repo}
 
   name "invoice"
   description "Invoice tracker"
@@ -39,11 +38,6 @@ defmodule InvoiceTracker.CLI do
   end
 
   defp start_repo(context) do
-    Repo.start_link(fn -> {:dets, table(context)} end)
-  end
-
-  defp table(context) do
-    {:ok, table} = :dets.open_file(context.file, [access: :read_write])
-    table
+    Repo.start_link_with_file(context.file)
   end
 end

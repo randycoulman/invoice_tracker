@@ -3,8 +3,7 @@ defmodule InvoiceTrackerTest do
 
   use ExUnit.Case
   import Mock
-  alias InvoiceTracker.Invoice
-  alias InvoiceTracker.Repo
+  alias InvoiceTracker.{Invoice, Repo}
 
   # doctest InvoiceTracker
 
