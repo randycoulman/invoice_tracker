@@ -7,17 +7,12 @@ defmodule InvoiceTracker.Repo do
 
   alias InvoiceTracker.Invoice
 
-  @type table_factory :: (() -> {Module.t, term})
-
-  @spec start_link(table_factory) :: Agent.onstart()
   def start_link(factory) do
     Agent.start_link(factory, name: @agent)
   end
 
-  @spec store(Invoice.t) :: :ok
   def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
 
-  @spec find(integer) :: {:ok, Invoice.t} | {:error, atom}
   def find(number), do: Agent.get(@agent, &do_find(&1, number))
 
   defp do_store({storage, table}, invoice) do

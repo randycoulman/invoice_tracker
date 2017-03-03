@@ -8,6 +8,5 @@ defmodule InvoiceTracker do
   @doc """
   Record an invoice.
   """
-  @spec record(Invoice.t, Repo.t) :: :ok
   def record(invoice, repo \\ Repo), do: repo.store(invoice)
 end
