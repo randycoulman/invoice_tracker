@@ -3,9 +3,11 @@ defmodule InvoiceTracker do
   Track invoices and payments.
   """
 
+  alias InvoiceTracker.Repo
+
   @doc """
   Record an invoice.
   """
-  @spec record(Repo.t, Invoice.t) :: :ok
-  def record(repo, invoice), do: repo.store(invoice)
+  @spec record(Invoice.t, Repo.t) :: :ok
+  def record(invoice, repo \\ Repo), do: repo.store(invoice)
 end

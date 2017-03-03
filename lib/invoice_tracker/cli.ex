@@ -33,7 +33,7 @@ defmodule InvoiceTracker.CLI do
     run context do
       start_repo(context)
       invoice = struct(Invoice, context)
-      InvoiceTracker.record(Repo, invoice)
+      InvoiceTracker.record(invoice)
       IO.puts("Recorded invoice #{invoice}")
     end
   end
