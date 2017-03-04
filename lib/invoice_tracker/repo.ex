@@ -20,18 +20,24 @@ defmodule InvoiceTracker.Repo do
 
   def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
 
-  def find(number), do: Agent.get(@agent, &do_find(&1, number))
-
   defp do_store({storage, table}, invoice) do
     storage.insert(table, {key(invoice), invoice})
     {storage, table}
   end
+
+  def find(number), do: Agent.get(@agent, &do_find(&1, number))
 
   defp do_find({storage, table}, number) do
     case storage.lookup(table, number) do
       [] -> {:error, :no_such_invoice}
       [{_, invoice}] -> {:ok, invoice}
     end
+  end
+
+  def all, do: Agent.get(@agent, &do_all/1)
+
+  defp do_all({storage, table}) do
+    storage.foldr(fn {_, invoice}, list -> [invoice | list] end, [], table)
   end
 
   defp key(invoice), do: invoice.number

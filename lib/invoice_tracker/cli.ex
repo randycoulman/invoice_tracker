@@ -5,7 +5,7 @@ defmodule InvoiceTracker.CLI do
 
   use ExCLI.DSL, escript: true
 
-  alias InvoiceTracker.{Invoice, Repo}
+  alias InvoiceTracker.{Invoice, Repo, TableFormatter}
 
   name "invoice"
   description "Invoice tracker"
@@ -34,6 +34,16 @@ defmodule InvoiceTracker.CLI do
       invoice = struct(Invoice, context)
       InvoiceTracker.record(invoice)
       IO.puts("Recorded invoice #{invoice}")
+    end
+  end
+
+  command :list do
+    run context do
+      start_repo(context)
+      InvoiceTracker.all()
+      |> Enum.sort_by(&(&1.number))
+      |> TableFormatter.format
+      |> IO.write
     end
   end
 
