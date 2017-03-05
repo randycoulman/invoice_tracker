@@ -29,4 +29,18 @@ defmodule InvoiceTrackerTest do
       assert(other_invoice in all)
     end
   end
+
+  describe "recording a payment" do
+    test "updates the invoice with the payment date", %{invoice: invoice} do
+      InvoiceTracker.record(invoice)
+      InvoiceTracker.pay(invoice.number, ~D{2017-02-08})
+      updated = %Invoice{
+        number: 42,
+        date: ~D{2017-01-16},
+        amount: 1250.34,
+        paid_on: ~D{2017-02-08}
+      }
+      assert InvoiceTracker.lookup(invoice.number) == updated
+    end
+  end
 end

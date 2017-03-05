@@ -33,7 +33,21 @@ defmodule InvoiceTracker.CLI do
       start_repo(context)
       invoice = struct(Invoice, context)
       InvoiceTracker.record(invoice)
-      IO.puts("Recorded invoice #{invoice}")
+    end
+  end
+
+  command :payment do
+    description "Records a payment"
+
+    argument :number, type: :integer
+    option :date,
+      help: "The invoice date",
+      aliases: [:d],
+      required: true
+
+    run context do
+      start_repo(context)
+      InvoiceTracker.pay(context.number, context.date)
     end
   end
 

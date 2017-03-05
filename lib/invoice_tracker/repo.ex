@@ -18,11 +18,10 @@ defmodule InvoiceTracker.Repo do
     Agent.start_link(factory, name: @agent)
   end
 
-  def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
+  def all, do: Agent.get(@agent, &do_all/1)
 
-  defp do_store({storage, table}, invoice) do
-    storage.insert(table, {key(invoice), invoice})
-    {storage, table}
+  defp do_all({storage, table}) do
+    storage.foldr(fn {_, invoice}, list -> [invoice | list] end, [], table)
   end
 
   def find(number), do: Agent.get(@agent, &do_find(&1, number))
@@ -34,10 +33,19 @@ defmodule InvoiceTracker.Repo do
     end
   end
 
-  def all, do: Agent.get(@agent, &do_all/1)
+  def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
 
-  defp do_all({storage, table}) do
-    storage.foldr(fn {_, invoice}, list -> [invoice | list] end, [], table)
+  defp do_store({storage, table}, invoice) do
+    storage.insert(table, {key(invoice), invoice})
+    {storage, table}
+  end
+
+  def update(number, updater),
+    do: Agent.update(@agent, &do_update(&1, number, updater))
+
+  defp do_update(state, number, updater) do
+    {:ok, invoice} = do_find(state, number)
+    do_store(state, updater.(invoice))
   end
 
   defp key(invoice), do: invoice.number
