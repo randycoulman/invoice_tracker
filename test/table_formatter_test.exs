@@ -6,7 +6,7 @@ defmodule TableFormatterTest do
 
   describe "with no invoices" do
     setup do
-      [output: TableFormatter.format([])]
+      {:ok, output: TableFormatter.format([])}
     end
 
     test "reports that there are no invoices", %{output: output} do
@@ -21,7 +21,7 @@ defmodule TableFormatterTest do
         %Invoice{number: 100, date: ~D{2015-12-01}, amount: 15.00},
         %Invoice{number: 2, date: ~D{1999-07-16}, amount: 100_123.98}
       ]
-      [output: TableFormatter.format(invoices)]
+      {:ok, output: TableFormatter.format(invoices)}
     end
 
     test "nicely formats the table", %{output: output} do

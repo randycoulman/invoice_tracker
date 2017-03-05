@@ -16,7 +16,7 @@ defmodule FeaturesTest do
       record_invoice(file, "98", "1575.00", "2017-02-01")
       record_invoice(file, "100", "773.89", "2017-03-01")
       output = list_invoices(file)
-      [output: output]
+      {:ok, output: output}
     end
 
     test "shows all recorded invoices in a table", %{output: output} do
