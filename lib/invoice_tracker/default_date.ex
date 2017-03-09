@@ -7,14 +7,16 @@ defmodule InvoiceTracker.DefaultDate do
   billing cycle, we jump forward to the next day.
   """
 
-  def for_invoice(today \\ Timex.to_date(Timex.local)) do
+  def for_invoice(today \\ local_today()) do
     tomorrow = Timex.shift(today, days: 1)
     if tomorrow.day >= 16 do
       %{tomorrow | day: 16}
     else
       %{tomorrow | day: 1}
     end
-
   end
 
+  def for_payment(today \\ local_today()), do: today
+
+  defp local_today, do: Timex.to_date(Timex.local)
 end

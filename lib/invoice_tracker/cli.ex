@@ -45,6 +45,7 @@ defmodule InvoiceTracker.CLI do
     option :date,
       help: "The invoice date",
       aliases: [:d],
+      default: DefaultDate.for_payment(),
       required: true
 
     run context do

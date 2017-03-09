@@ -34,4 +34,10 @@ defmodule DefaultDateTest do
       assert DefaultDate.for_invoice(~D[2016-12-31]) == ~D[2017-01-01]
     end
   end
+
+  describe "default payment date" do
+    test "always uses today" do
+      assert DefaultDate.for_payment(~D[2017-03-07]) == ~D[2017-03-07]
+    end
+  end
 end
