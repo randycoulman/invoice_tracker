@@ -5,7 +5,7 @@ defmodule InvoiceTracker.CLI do
 
   use ExCLI.DSL, escript: true
 
-  alias InvoiceTracker.{Invoice, Repo, TableFormatter}
+  alias InvoiceTracker.{DefaultDate, Invoice, Repo, TableFormatter}
 
   name "invoice"
   description "Invoice tracker"
@@ -28,6 +28,7 @@ defmodule InvoiceTracker.CLI do
     option :date,
       help: "The invoice date",
       aliases: [:d],
+      default: DefaultDate.for_invoice(),
       required: true
 
     run context do
