@@ -3,7 +3,7 @@ defmodule InvoiceTracker do
   Track invoices and payments.
   """
 
-  alias InvoiceTracker.Repo
+  alias InvoiceTracker.{Invoice, Repo}
 
   @doc """
   Return a list of all invoices
@@ -19,6 +19,20 @@ defmodule InvoiceTracker do
   end
 
   @doc """
+  Find the earliest invoice that hasn't yet been paid.
+  """
+  def oldest_unpaid_invoice do
+    all()
+    |> Enum.reject(&Invoice.paid?/1)
+    |> Enum.sort_by(&(Map.get(&1, :date)), &older?/2)
+    |> List.first
+  end
+
+  defp older?(d1, d2) do
+    Timex.compare(d1, d2) < 0
+  end
+
+  @doc """
   Record an invoice.
   """
   def record(invoice), do: Repo.store(invoice)
@@ -27,6 +41,6 @@ defmodule InvoiceTracker do
   Mark an invoice as paid.
   """
   def pay(number, date) do
-    Repo.update(number, fn(invoice) -> %{invoice | paid_on: date} end)
+    Repo.update(number, &(Invoice.pay(&1, date)))
   end
 end

@@ -21,12 +21,29 @@ defmodule InvoiceTrackerTest do
   describe "listing all invoices" do
     test "includes all recorded invoices", %{invoice: invoice} do
       other_invoice = %Invoice{number: 46, date: ~D{2017-03-16}, amount: 789.54}
-      Repo.store(invoice)
-      Repo.store(other_invoice)
-      all = Repo.all()
+      InvoiceTracker.record(invoice)
+      InvoiceTracker.record(other_invoice)
+      all = InvoiceTracker.all()
 
       assert(invoice in all)
       assert(other_invoice in all)
+    end
+  end
+
+  describe "oldest unpaid invoice" do
+    test "returns unpaid invoice with the earliest date", %{invoice: invoice} do
+      earlier = %Invoice{number: 41, date: ~D[2017-01-01], amount: 1756.05}
+      earliest_but_paid = %Invoice{
+        number: 40,
+        date: ~D{2016-12-16},
+        amount: 1000.00,
+        paid_on: ~D{2017-01-18}
+      }
+      InvoiceTracker.record(invoice)
+      InvoiceTracker.record(earliest_but_paid)
+      InvoiceTracker.record(earlier)
+
+      assert InvoiceTracker.oldest_unpaid_invoice() == earlier
     end
   end
 

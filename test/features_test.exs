@@ -16,6 +16,7 @@ defmodule FeaturesTest do
       record_invoice(file, "98", "1575.00", "2017-02-01")
       record_invoice(file, "100", "773.89", "2017-03-01")
       record_payment(file, "99", "2017-03-20")
+      record_payment(file, "2017-03-06")
       output = list_invoices(file)
       {:ok, output: output}
     end
@@ -25,7 +26,7 @@ defmodule FeaturesTest do
       +------------+-----+----------+------------+
       |    Date    |  #  |  Amount  |    Paid    |
       +------------+-----+----------+------------+
-      | 2017-02-01 |  98 | 1,575.00 |            |
+      | 2017-02-01 |  98 | 1,575.00 | 2017-03-06 |
       | 2017-02-16 |  99 | 1,298.45 | 2017-03-20 |
       | 2017-03-01 | 100 |   773.89 |            |
       +------------+-----+----------+------------+
@@ -37,8 +38,12 @@ defmodule FeaturesTest do
     run("record", file, [number, amount, "--date", date])
   end
 
+  defp record_payment(file, date) do
+    run("payment", file, ["--date", date])
+  end
+
   defp record_payment(file, number, date) do
-    run("payment", file, [number, "--date", date])
+    run("payment", file, ["--number", number, "--date", date])
   end
 
   defp list_invoices(file) do

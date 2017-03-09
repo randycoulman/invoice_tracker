@@ -33,7 +33,11 @@ defmodule InvoiceTracker.CLI do
 
     run context do
       start_repo(context)
-      invoice = struct(Invoice, context)
+      invoice = %Invoice{
+        number: context.number,
+        amount: context.amount,
+        date: Date.from_iso8601!(context.date)
+      }
       InvoiceTracker.record(invoice)
     end
   end
@@ -41,16 +45,23 @@ defmodule InvoiceTracker.CLI do
   command :payment do
     description "Records a payment"
 
-    argument :number, type: :integer
+    option :number,
+      help: "The invoice number (default: oldest unpaid)",
+      aliases: [:n],
+      type: :integer
+
     option :date,
-      help: "The invoice date",
+      help: "The invoice date (default: today)",
       aliases: [:d],
       default: DefaultDate.for_payment(),
       required: true
 
     run context do
       start_repo(context)
-      InvoiceTracker.pay(context.number, context.date)
+      number = Map.get(context, :number,
+        InvoiceTracker.oldest_unpaid_invoice().number
+      )
+      InvoiceTracker.pay(number, context.date)
     end
   end
 
