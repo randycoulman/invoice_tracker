@@ -17,6 +17,7 @@ defmodule InvoiceTracker.CLI do
   option :file,
     help: "The invoice data file to use",
     aliases: [:f],
+    default: "invoices.ets",
     required: true
 
   command :record do
