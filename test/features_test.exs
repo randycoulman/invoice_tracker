@@ -5,24 +5,29 @@ defmodule FeaturesTest do
 
   setup_all do
     {_, 0} = System.cmd "mix", ["escript.build"]
-    :ok
+    path = Briefly.create!(directory: true)
+    file = Path.join(path, "invoices.ets")
+    record_invoice(file, "99", "1298.45", "2017-02-16")
+    record_invoice(file, "98", "1575.00", "2017-02-01")
+    record_invoice(file, "100", "773.89", "2017-03-01")
+    record_payment(file, "99", "2017-03-20")
+    record_payment(file, "2017-03-06")
+    {:ok, invoice_file: file}
   end
 
   describe "end to end" do
-    setup do
-      path = Briefly.create!(directory: true)
-      file = Path.join(path, "invoices.ets")
-      record_invoice(file, "99", "1298.45", "2017-02-16")
-      record_invoice(file, "98", "1575.00", "2017-02-01")
-      record_invoice(file, "100", "773.89", "2017-03-01")
-      record_payment(file, "99", "2017-03-20")
-      record_payment(file, "2017-03-06")
-      output = list_invoices(file)
-      {:ok, output: output}
+    test "shows active invoices in a table", %{invoice_file: file} do
+      assert list_invoices(file) == """
+      +------------+-----+--------+------+
+      |    Date    |  #  | Amount | Paid |
+      +------------+-----+--------+------+
+      | 2017-03-01 | 100 | 773.89 |      |
+      +------------+-----+--------+------+
+      """
     end
 
-    test "shows all recorded invoices in a table", %{output: output} do
-      assert output == """
+    test "shows all recorded invoices in a table", %{invoice_file: file} do
+      assert list_all_invoices(file) == """
       +------------+-----+----------+------------+
       |    Date    |  #  |  Amount  |    Paid    |
       +------------+-----+----------+------------+
@@ -48,6 +53,10 @@ defmodule FeaturesTest do
 
   defp list_invoices(file) do
     run("list", file)
+  end
+
+  defp list_all_invoices(file) do
+    run("list", file, ["--all"])
   end
 
   defp run(command, file, args \\ []) do

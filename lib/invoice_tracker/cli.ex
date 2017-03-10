@@ -69,14 +69,25 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :list do
+    option :all,
+      help: "List all invoices (default: show unpaid only)",
+      aliases: [:a],
+      default: false,
+      type: :boolean
+
     run context do
       start_repo(context)
-      InvoiceTracker.all()
+
+      context.all
+      |> selected_invoices
       |> Enum.sort_by(&(&1.number))
       |> TableFormatter.format
       |> IO.write
     end
   end
+
+  defp selected_invoices(true), do: InvoiceTracker.all()
+  defp selected_invoices(_), do: InvoiceTracker.unpaid()
 
   def process_date_option(option, context, [{:arg, value} | rest]) do
     date = Date.from_iso8601!(value)

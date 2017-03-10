@@ -20,13 +20,36 @@ defmodule InvoiceTrackerTest do
 
   describe "listing all invoices" do
     test "includes all recorded invoices", %{invoice: invoice} do
-      other_invoice = %Invoice{number: 46, date: ~D{2017-03-16}, amount: 789.54}
+      paid = %Invoice{
+        number: 46,
+        date: ~D{2017-03-16},
+        amount: 789.54,
+        paid_on: ~D{2017-04-06}
+      }
       InvoiceTracker.record(invoice)
-      InvoiceTracker.record(other_invoice)
+      InvoiceTracker.record(paid)
       all = InvoiceTracker.all()
 
       assert(invoice in all)
-      assert(other_invoice in all)
+      assert(paid in all)
+    end
+  end
+
+  describe "listing unpaid invoices" do
+    test "includes only unpaid invoices", %{invoice: invoice} do
+      paid = %Invoice{
+        number: 46,
+        date: ~D{2017-03-16},
+        amount: 789.54,
+        paid_on: ~D{2017-04-06}
+      }
+      InvoiceTracker.record(invoice)
+      InvoiceTracker.record(paid)
+      InvoiceTracker.pay(paid.number, ~D{2017-04-06})
+      unpaid = InvoiceTracker.unpaid()
+
+      assert(invoice in unpaid)
+      refute(paid in unpaid)
     end
   end
 

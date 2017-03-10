@@ -11,6 +11,14 @@ defmodule InvoiceTracker do
   def all, do: Repo.all()
 
   @doc """
+  Return a list of all unpaid invoices
+  """
+  def unpaid do
+    all()
+    |> Enum.reject(&Invoice.paid?/1)
+  end
+
+  @doc """
   Find an invoice by its number.
   """
   def lookup(number) do
@@ -22,8 +30,7 @@ defmodule InvoiceTracker do
   Find the earliest invoice that hasn't yet been paid.
   """
   def oldest_unpaid_invoice do
-    all()
-    |> Enum.reject(&Invoice.paid?/1)
+    unpaid()
     |> Enum.sort_by(&(Map.get(&1, :date)), &older?/2)
     |> List.first
   end
