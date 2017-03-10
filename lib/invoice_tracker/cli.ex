@@ -5,6 +5,7 @@ defmodule InvoiceTracker.CLI do
 
   use ExCLI.DSL, escript: true
 
+  alias ExCLI.Argument
   alias InvoiceTracker.{DefaultDate, Invoice, Repo, TableFormatter}
 
   name "invoice"
@@ -29,6 +30,7 @@ defmodule InvoiceTracker.CLI do
       help: "The invoice date",
       aliases: [:d],
       default: DefaultDate.for_invoice(),
+      process: &__MODULE__.process_date_option/3,
       required: true
 
     run context do
@@ -36,7 +38,7 @@ defmodule InvoiceTracker.CLI do
       invoice = %Invoice{
         number: context.number,
         amount: context.amount,
-        date: Date.from_iso8601!(context.date)
+        date: context.date
       }
       InvoiceTracker.record(invoice)
     end
@@ -54,6 +56,7 @@ defmodule InvoiceTracker.CLI do
       help: "The invoice date (default: today)",
       aliases: [:d],
       default: DefaultDate.for_payment(),
+      process: &__MODULE__.process_date_option/3,
       required: true
 
     run context do
@@ -73,6 +76,11 @@ defmodule InvoiceTracker.CLI do
       |> TableFormatter.format
       |> IO.write
     end
+  end
+
+  def process_date_option(option, context, [{:arg, value} | rest]) do
+    date = Date.from_iso8601!(value)
+    {:ok, Map.put(context, Argument.key(option), date), rest}
   end
 
   defp start_repo(context) do
