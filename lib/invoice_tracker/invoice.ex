@@ -13,7 +13,7 @@ defmodule InvoiceTracker.Invoice do
   def due_on(invoice), do: Timex.shift(invoice.date, days: 15)
 
   def active_since?(invoice, date) do
-    !paid?(invoice) || Timex.compare(date, last_activity(invoice)) < 0
+    !paid?(invoice) || Timex.before?(date, last_activity(invoice))
   end
 
   defp last_activity(invoice) do

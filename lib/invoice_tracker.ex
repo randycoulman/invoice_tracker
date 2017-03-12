@@ -44,12 +44,8 @@ defmodule InvoiceTracker do
   """
   def oldest_unpaid_invoice do
     unpaid()
-    |> Enum.sort_by(&(Map.get(&1, :date)), &older?/2)
+    |> Enum.sort_by(&(Map.get(&1, :date)), &Timex.before?/2)
     |> List.first
-  end
-
-  defp older?(d1, d2) do
-    Timex.compare(d1, d2) < 0
   end
 
   @doc """
