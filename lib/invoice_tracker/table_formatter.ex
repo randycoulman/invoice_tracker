@@ -33,7 +33,6 @@ defmodule InvoiceTracker.TableFormatter do
     |> Table.put_header(["Date", "#", "Amount", "Due", "Paid", "Status"])
     |> Table.put_header_meta(0..5, align: :center)
     |> Table.put_column_meta(1..2, align: :right)
-    |> Table.put_column_meta(5, align: :center)
     |> Table.render!
   end
 
