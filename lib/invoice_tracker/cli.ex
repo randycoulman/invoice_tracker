@@ -69,6 +69,8 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :list do
+    description "List invoices"
+
     option :all,
       help: "List all invoices (default: show unpaid only)",
       aliases: [:a],
@@ -90,8 +92,10 @@ defmodule InvoiceTracker.CLI do
   defp selected_invoices(_), do: InvoiceTracker.unpaid()
 
   command :status do
+    description "Show an invoice status report"
+
     option :date,
-      help: "Show status as of this date (default: today)",
+      help: "Show status as of this date (default: most recent Friday)",
       aliases: [:d],
       default: DefaultDate.for_current_status(),
       process: &__MODULE__.process_date_option/3,
