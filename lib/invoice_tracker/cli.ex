@@ -104,7 +104,7 @@ defmodule InvoiceTracker.CLI do
 
     run context do
       start_repo(context)
-      since = context.since || DefaultDate.for_previous_status(context.date)
+      since = context[:since] || DefaultDate.for_previous_status(context.date)
       since
       |> InvoiceTracker.active_since
       |> Enum.sort_by(&(&1.number))

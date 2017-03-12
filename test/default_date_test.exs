@@ -42,8 +42,12 @@ defmodule DefaultDateTest do
   end
 
   describe "default current status date" do
-    test "always uses today" do
-      assert DefaultDate.for_current_status(~D[2017-03-07]) == ~D[2017-03-07]
+    test "uses today if it's Friday" do
+      assert DefaultDate.for_current_status(~D[2017-03-10]) == ~D[2017-03-10]
+    end
+
+    test "uses most recent Friday" do
+      assert DefaultDate.for_current_status(~D[2017-03-09]) == ~D[2017-03-03]
     end
   end
 

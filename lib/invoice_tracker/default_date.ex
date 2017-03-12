@@ -18,7 +18,9 @@ defmodule InvoiceTracker.DefaultDate do
 
   def for_payment(today \\ local_today()), do: today
 
-  def for_current_status(today \\ local_today()), do: today
+  def for_current_status(today \\ local_today()) do
+    Timex.beginning_of_week(today, :fri)
+  end
 
   def for_previous_status(current_status_date) do
     Timex.shift(current_status_date, weeks: -1)
