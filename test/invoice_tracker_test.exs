@@ -6,26 +6,23 @@ defmodule InvoiceTrackerTest do
 
   setup do
     Repo.start_link_in_memory()
-    {:ok, invoice: %Invoice{number: 42, date: ~D{2017-01-16}, amount: 1250.34}}
+    :ok
   end
 
   # doctest InvoiceTracker
 
   describe "recording an invoice" do
-    test "it remembers the invoice", %{invoice: invoice} do
+    test "it remembers the invoice" do
+      invoice = make_invoice()
       InvoiceTracker.record(invoice)
       assert InvoiceTracker.lookup(invoice.number) == invoice
     end
   end
 
   describe "listing all invoices" do
-    test "includes all recorded invoices", %{invoice: invoice} do
-      paid = %Invoice{
-        number: 46,
-        date: ~D{2017-03-16},
-        amount: 789.54,
-        paid_on: ~D{2017-04-06}
-      }
+    test "includes all recorded invoices" do
+      invoice = make_invoice()
+      paid = make_invoice(number: 46, paid_on: ~D{2017-04-06})
       InvoiceTracker.record(invoice)
       InvoiceTracker.record(paid)
       all = InvoiceTracker.all()
@@ -36,16 +33,11 @@ defmodule InvoiceTrackerTest do
   end
 
   describe "listing unpaid invoices" do
-    test "includes only unpaid invoices", %{invoice: invoice} do
-      paid = %Invoice{
-        number: 46,
-        date: ~D{2017-03-16},
-        amount: 789.54,
-        paid_on: ~D{2017-04-06}
-      }
+    test "includes only unpaid invoices" do
+      invoice = make_invoice()
+      paid = make_invoice(number: 46, paid_on: ~D[2017-04-06])
       InvoiceTracker.record(invoice)
       InvoiceTracker.record(paid)
-      InvoiceTracker.pay(paid.number, ~D{2017-04-06})
       unpaid = InvoiceTracker.unpaid()
 
       assert(invoice in unpaid)
@@ -53,15 +45,36 @@ defmodule InvoiceTrackerTest do
     end
   end
 
+  describe "listing active invoices" do
+    test "includes invoices recorded or paid since a given date" do
+      paid_before = make_invoice(
+        number: 42, date: ~D[2017-02-16], paid_on: ~D[2017-03-10]
+      )
+      paid_after = make_invoice(
+        number: 43, date: ~D[2017-03-01], paid_on: ~D[2017-03-30]
+      )
+      unpaid = make_invoice(number: 44, date: ~D[2017-03-16])
+      issued_after = make_invoice(number: 46, date: ~D[2017-04-01])
+      InvoiceTracker.record(paid_before)
+      InvoiceTracker.record(paid_after)
+      InvoiceTracker.record(unpaid)
+      InvoiceTracker.record(issued_after)
+      active = InvoiceTracker.active_since(~D[2017-03-24])
+
+      refute(paid_before in active)
+      assert(paid_after in active)
+      assert(unpaid in active)
+      assert(issued_after in active)
+    end
+  end
+
   describe "oldest unpaid invoice" do
-    test "returns unpaid invoice with the earliest date", %{invoice: invoice} do
-      earlier = %Invoice{number: 41, date: ~D[2017-01-01], amount: 1756.05}
-      earliest_but_paid = %Invoice{
-        number: 40,
-        date: ~D{2016-12-16},
-        amount: 1000.00,
-        paid_on: ~D{2017-01-18}
-      }
+    test "returns unpaid invoice with the earliest date" do
+      invoice = make_invoice(date: ~D{2017-01-16})
+      earlier = make_invoice(number: 41, date: ~D[2017-01-01])
+      earliest_but_paid = make_invoice(
+        number: 40, date: ~D{2016-12-16}, paid_on: ~D{2017-01-18}
+      )
       InvoiceTracker.record(invoice)
       InvoiceTracker.record(earliest_but_paid)
       InvoiceTracker.record(earlier)
@@ -71,16 +84,21 @@ defmodule InvoiceTrackerTest do
   end
 
   describe "recording a payment" do
-    test "updates the invoice with the payment date", %{invoice: invoice} do
+    test "updates the invoice with the payment date" do
+      invoice = make_invoice()
       InvoiceTracker.record(invoice)
       InvoiceTracker.pay(invoice.number, ~D{2017-02-08})
-      updated = %Invoice{
-        number: 42,
-        date: ~D{2017-01-16},
-        amount: 1250.34,
-        paid_on: ~D{2017-02-08}
-      }
+      updated = make_invoice(paid_on: ~D{2017-02-08})
       assert InvoiceTracker.lookup(invoice.number) == updated
     end
+  end
+
+  defp make_invoice(options \\ []) do
+    %Invoice{
+      number: options[:number] || 42,
+      date: options[:date] || ~D{2017-01-16},
+      amount: options[:amount] || 1250.34,
+      paid_on: options[:paid_on]
+    }
   end
 end

@@ -81,13 +81,37 @@ defmodule InvoiceTracker.CLI do
       context.all
       |> selected_invoices
       |> Enum.sort_by(&(&1.number))
-      |> TableFormatter.format
+      |> TableFormatter.format_list
       |> IO.write
     end
   end
 
   defp selected_invoices(true), do: InvoiceTracker.all()
   defp selected_invoices(_), do: InvoiceTracker.unpaid()
+
+  command :status do
+    option :date,
+      help: "Show status as of this date (default: today)",
+      aliases: [:d],
+      default: DefaultDate.for_current_status(),
+      process: &__MODULE__.process_date_option/3,
+      required: true
+
+    option :since,
+      help: "Include activity since this date (default: 1 week ago)",
+      aliases: [:s],
+      process: &__MODULE__.process_date_option/3
+
+    run context do
+      start_repo(context)
+      since = context.since || DefaultDate.for_previous_status(context.date)
+      since
+      |> InvoiceTracker.active_since
+      |> Enum.sort_by(&(&1.number))
+      |> TableFormatter.format_status(context.date)
+      |> IO.write
+    end
+  end
 
   def process_date_option(option, context, [{:arg, value} | rest]) do
     date = Date.from_iso8601!(value)

@@ -10,19 +10,21 @@ defmodule FeaturesTest do
     record_invoice(file, "99", "1298.45", "2017-02-16")
     record_invoice(file, "98", "1575.00", "2017-02-01")
     record_invoice(file, "100", "773.89", "2017-03-01")
+    record_invoice(file, "101", "1322.28", "2017-03-16")
     record_payment(file, "99", "2017-03-20")
-    record_payment(file, "2017-03-06")
+    record_payment(file, "2017-02-15")
     {:ok, invoice_file: file}
   end
 
   describe "end to end" do
     test "shows active invoices in a table", %{invoice_file: file} do
       assert list_invoices(file) == """
-      +------------+-----+--------+------+
-      |    Date    |  #  | Amount | Paid |
-      +------------+-----+--------+------+
-      | 2017-03-01 | 100 | 773.89 |      |
-      +------------+-----+--------+------+
+      +------------+-----+----------+------+
+      |    Date    |  #  |  Amount  | Paid |
+      +------------+-----+----------+------+
+      | 2017-03-01 | 100 |   773.89 |      |
+      | 2017-03-16 | 101 | 1,322.28 |      |
+      +------------+-----+----------+------+
       """
     end
 
@@ -31,10 +33,25 @@ defmodule FeaturesTest do
       +------------+-----+----------+------------+
       |    Date    |  #  |  Amount  |    Paid    |
       +------------+-----+----------+------------+
-      | 2017-02-01 |  98 | 1,575.00 | 2017-03-06 |
+      | 2017-02-01 |  98 | 1,575.00 | 2017-02-15 |
       | 2017-02-16 |  99 | 1,298.45 | 2017-03-20 |
       | 2017-03-01 | 100 |   773.89 |            |
+      | 2017-03-16 | 101 | 1,322.28 |            |
       +------------+-----+----------+------------+
+      """
+    end
+
+    test "reports invoice status as of a date", %{invoice_file: file} do
+      assert invoice_status(file, "2017-03-31", "2017-03-17") === """
+      +----------------------------------------------------------------------+
+      |                   Invoice status as of 2017-03-31                    |
+      +------------+-----+----------+------------+------------+--------------+
+      |    Date    |  #  |  Amount  |    Due     |    Paid    |    Status    |
+      +------------+-----+----------+------------+------------+--------------+
+      | 2017-02-16 |  99 | 1,298.45 | 2017-03-03 | 2017-03-20 | 17 days late |
+      | 2017-03-01 | 100 |   773.89 | 2017-03-16 |            | 15 days late |
+      | 2017-03-16 | 101 | 1,322.28 | 2017-03-31 |            |   Current    |
+      +------------+-----+----------+------------+------------+--------------+
       """
     end
   end
@@ -57,6 +74,10 @@ defmodule FeaturesTest do
 
   defp list_all_invoices(file) do
     run("list", file, ["--all"])
+  end
+
+  defp invoice_status(file, status_date, previous_date) do
+    run("status", file, ["--date", status_date, "--since", previous_date])
   end
 
   defp run(command, file, args \\ []) do

@@ -40,4 +40,16 @@ defmodule DefaultDateTest do
       assert DefaultDate.for_payment(~D[2017-03-07]) == ~D[2017-03-07]
     end
   end
+
+  describe "default current status date" do
+    test "always uses today" do
+      assert DefaultDate.for_current_status(~D[2017-03-07]) == ~D[2017-03-07]
+    end
+  end
+
+  describe "default previous status date" do
+    test "always one week ago" do
+      assert DefaultDate.for_previous_status(~D[2017-03-07]) == ~D[2017-02-28]
+    end
+  end
 end

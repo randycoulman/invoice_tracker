@@ -19,6 +19,19 @@ defmodule InvoiceTracker do
   end
 
   @doc """
+  Return a list of all invoices that were active after a given date.
+
+  Active means:
+    * Unpaid as of that date
+    * Issued since that date
+    * Paid since that date
+  """
+  def active_since(date) do
+    all()
+    |> Enum.filter(&(Invoice.active_since?(&1, date)))
+  end
+
+  @doc """
   Find an invoice by its number.
   """
   def lookup(number) do

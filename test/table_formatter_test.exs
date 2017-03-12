@@ -6,11 +6,17 @@ defmodule TableFormatterTest do
 
   describe "with no invoices" do
     setup do
-      {:ok, output: TableFormatter.format([])}
+      {:ok, invoices: []}
     end
 
-    test "reports that there are no invoices", %{output: output} do
+    test "reports that the list is empty", %{invoices: invoices} do
+      output = TableFormatter.format_list(invoices)
       assert output == "No invoices found\n"
+    end
+
+    test "reports that the status report is empty", %{invoices: invoices} do
+      output = TableFormatter.format_status(invoices, ~D[2017-03-30])
+      assert output == "No active invoices\n"
     end
   end
 
@@ -26,10 +32,11 @@ defmodule TableFormatterTest do
         %Invoice{number: 100, date: ~D{2015-12-01}, amount: 15.00},
         %Invoice{number: 2, date: ~D{1999-07-16}, amount: 100_123.98}
       ]
-      {:ok, output: TableFormatter.format(invoices)}
+      {:ok, invoices: invoices}
     end
 
-    test "nicely formats the table", %{output: output} do
+    test "nicely formats the list", %{invoices: invoices} do
+      output = TableFormatter.format_list(invoices)
       assert output == """
       +------------+-----+------------+------------+
       |    Date    |  #  |   Amount   |    Paid    |
@@ -38,6 +45,21 @@ defmodule TableFormatterTest do
       | 2015-12-01 | 100 |      15.00 |            |
       | 1999-07-16 |   2 | 100,123.98 |            |
       +------------+-----+------------+------------+
+      """
+    end
+
+    test "nicely formats the status report", %{invoices: invoices} do
+      output = TableFormatter.format_status(invoices, ~D[2017-01-15])
+      assert output == """
+      +--------------------------------------------------------------------------+
+      |                     Invoice status as of 2017-01-15                      |
+      +------------+-----+------------+------------+------------+----------------+
+      |    Date    |  #  |   Amount   |    Due     |    Paid    |     Status     |
+      +------------+-----+------------+------------+------------+----------------+
+      | 2017-01-16 |  30 |   1,250.34 | 2017-01-31 | 2017-01-28 |  Paid on time  |
+      | 2015-12-01 | 100 |      15.00 | 2015-12-16 |            | 396 days late  |
+      | 1999-07-16 |   2 | 100,123.98 | 1999-07-31 |            | 6378 days late |
+      +------------+-----+------------+------------+------------+----------------+
       """
     end
   end
