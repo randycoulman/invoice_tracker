@@ -26,6 +26,7 @@ defmodule InvoiceTracker.Invoice do
     do_status(paid?(invoice), days_late)
   end
 
+  defp do_status(_, 1), do: "1 day late"
   defp do_status(_, days_late) when days_late > 0, do: "#{days_late} days late"
   defp do_status(false, _), do: "Current"
   defp do_status(_, _), do: "Paid on time"

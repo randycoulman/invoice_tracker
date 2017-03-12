@@ -74,5 +74,9 @@ defmodule InvoiceTest do
     test "late if paid after due date", %{paid: paid} do
       assert Invoice.status(paid, ~D[2017-03-01]) == "22 days late"
     end
+
+    test "uses singular 'day' when one day late", %{invoice: invoice} do
+      assert Invoice.status(invoice, ~D[2017-01-17]) == "1 day late"
+    end
   end
 end
