@@ -29,16 +29,14 @@ defmodule InvoiceTracker.CLI do
     option :date,
       help: "The invoice date",
       aliases: [:d],
-      default: DefaultDate.for_invoice(),
-      process: &__MODULE__.process_date_option/3,
-      required: true
+      process: &__MODULE__.process_date_option/3
 
     run context do
       start_repo(context)
       invoice = %Invoice{
         number: context.number,
         amount: context.amount,
-        date: context.date
+        date: context[:date] || DefaultDate.for_invoice()
       }
       InvoiceTracker.record(invoice)
     end
@@ -55,16 +53,14 @@ defmodule InvoiceTracker.CLI do
     option :date,
       help: "The invoice date (default: today)",
       aliases: [:d],
-      default: DefaultDate.for_payment(),
-      process: &__MODULE__.process_date_option/3,
-      required: true
+      process: &__MODULE__.process_date_option/3
 
     run context do
       start_repo(context)
       number = Map.get(context, :number,
         InvoiceTracker.oldest_unpaid_invoice().number
       )
-      InvoiceTracker.pay(number, context.date)
+      InvoiceTracker.pay(number, context[:date] || DefaultDate.for_payment())
     end
   end
 
@@ -97,9 +93,7 @@ defmodule InvoiceTracker.CLI do
     option :date,
       help: "Show status as of this date (default: most recent Friday)",
       aliases: [:d],
-      default: DefaultDate.for_current_status(),
-      process: &__MODULE__.process_date_option/3,
-      required: true
+      process: &__MODULE__.process_date_option/3
 
     option :since,
       help: "Include activity since this date (default: 1 week ago)",
@@ -108,11 +102,12 @@ defmodule InvoiceTracker.CLI do
 
     run context do
       start_repo(context)
-      since = context[:since] || DefaultDate.for_previous_status(context.date)
+      date = context[:date] || DefaultDate.for_current_status()
+      since = context[:since] || DefaultDate.for_previous_status(date)
       since
       |> InvoiceTracker.active_since
       |> Enum.sort_by(&(&1.number))
-      |> TableFormatter.format_status(context.date)
+      |> TableFormatter.format_status(date)
       |> IO.write
     end
   end
