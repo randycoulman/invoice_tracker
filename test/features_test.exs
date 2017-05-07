@@ -9,8 +9,8 @@ defmodule FeaturesTest do
     file = Path.join(path, "invoices.ets")
     record_invoice(file, "99", "1298.45", "2017-02-16")
     record_invoice(file, "98", "1575.00", "2017-02-01")
-    record_invoice(file, "100", "773.89", "2017-03-01")
-    record_invoice(file, "101", "1322.28", "2017-03-16")
+    record_invoice(file, "773.89", "2017-03-01")
+    record_invoice(file, "1322.28", "2017-03-16")
     record_payment(file, "99", "2017-03-20")
     record_payment(file, "2017-02-15")
     {:ok, invoice_file: file}
@@ -56,8 +56,12 @@ defmodule FeaturesTest do
     end
   end
 
+  defp record_invoice(file, amount, date) do
+    run("record", file, [amount, "--date", date])
+  end
+
   defp record_invoice(file, number, amount, date) do
-    run("record", file, [number, amount, "--date", date])
+    run("record", file, [amount, "--date", date, "--number", number])
   end
 
   defp record_payment(file, date) do

@@ -24,17 +24,22 @@ defmodule InvoiceTracker.CLI do
   command :record do
     description "Records an invoice"
 
-    argument :number, type: :integer
     argument :amount, type: :float
+
     option :date,
       help: "The invoice date",
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
 
+    option :number,
+      help: "The invoice number (default is next highest number)",
+      aliases: [:n],
+      type: :integer
+
     run context do
       start_repo(context)
       invoice = %Invoice{
-        number: context.number,
+        number: context[:number] || InvoiceTracker.next_invoice_number(),
         amount: context.amount,
         date: context[:date] || DefaultDate.for_invoice()
       }

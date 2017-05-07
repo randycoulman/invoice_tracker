@@ -49,6 +49,19 @@ defmodule InvoiceTracker do
   end
 
   @doc """
+  Return the next available invoice number.
+  """
+  def next_invoice_number do
+    1 + highest_invoice_number()
+  end
+
+  defp highest_invoice_number do
+    all()
+    |> Enum.map(&(&1.number))
+    |> Enum.max(fn -> 0 end)
+  end
+
+  @doc """
   Record an invoice.
   """
   def record(invoice), do: Repo.store(invoice)

@@ -83,6 +83,20 @@ defmodule InvoiceTrackerTest do
     end
   end
 
+  describe "next invoice number" do
+    test "starts at 1" do
+      assert InvoiceTracker.next_invoice_number() == 1
+    end
+
+    test "returns one more than previous highest number" do
+      InvoiceTracker.record(make_invoice(number: 5))
+      InvoiceTracker.record(make_invoice(number: 41))
+      InvoiceTracker.record(make_invoice(number: 22))
+
+      assert InvoiceTracker.next_invoice_number() == 42
+    end
+  end
+
   describe "recording a payment" do
     test "updates the invoice with the payment date" do
       invoice = make_invoice()
