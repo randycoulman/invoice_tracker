@@ -6,7 +6,10 @@ defmodule InvoiceTracker.CLI do
   use ExCLI.DSL, escript: true
 
   alias ExCLI.Argument
-  alias InvoiceTracker.{DefaultDate, Invoice, Repo, TableFormatter}
+  alias InvoiceTracker.{Config, DefaultDate, Invoice, Repo, TableFormatter}
+
+  @config_file "~/.invoicerc"
+  @default_invoice_file "invoices.ets"
 
   name "invoice"
   description "Invoice tracker"
@@ -17,9 +20,7 @@ defmodule InvoiceTracker.CLI do
 
   option :file,
     help: "The invoice data file to use",
-    aliases: [:f],
-    default: "invoices.ets",
-    required: true
+    aliases: [:f]
 
   command :record do
     description "Records an invoice"
@@ -36,7 +37,8 @@ defmodule InvoiceTracker.CLI do
       aliases: [:n],
       type: :integer
 
-    run context do
+    run initial_context do
+      context = Map.merge(config(), initial_context)
       start_repo(context)
       invoice = %Invoice{
         number: context[:number] || InvoiceTracker.next_invoice_number(),
@@ -60,7 +62,8 @@ defmodule InvoiceTracker.CLI do
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
 
-    run context do
+    run initial_context do
+      context = Map.merge(config(), initial_context)
       start_repo(context)
       number = Map.get(context, :number,
         InvoiceTracker.oldest_unpaid_invoice().number
@@ -78,7 +81,8 @@ defmodule InvoiceTracker.CLI do
       default: false,
       type: :boolean
 
-    run context do
+    run initial_context do
+      context = Map.merge(config(), initial_context)
       start_repo(context)
 
       context.all
@@ -105,7 +109,8 @@ defmodule InvoiceTracker.CLI do
       aliases: [:s],
       process: &__MODULE__.process_date_option/3
 
-    run context do
+    run initial_context do
+      context = Map.merge(config(), initial_context)
       start_repo(context)
       date = context[:date] || DefaultDate.for_current_status()
       since = context[:since] || DefaultDate.for_previous_status(date)
@@ -122,7 +127,18 @@ defmodule InvoiceTracker.CLI do
     {:ok, Map.put(context, Argument.key(option), date), rest}
   end
 
+  defp config do
+    case File.open(Path.expand(@config_file), [:read], &Config.read/1) do
+      {:ok, res} -> res
+      {:error, :enoent} -> %{}
+      {:error, reason} ->
+        IO.puts("Unable to read config file #{@config_file}: #{reason}")
+        Process.exit(self(), reason)
+    end
+  end
+
   defp start_repo(context) do
-    Repo.start_link_with_file(context.file)
+    file = Path.expand(context[:file] || @default_invoice_file)
+    Repo.start_link_with_file(file)
   end
 end
