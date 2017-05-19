@@ -6,7 +6,15 @@ defmodule InvoiceTracker.CLI do
   use ExCLI.DSL, escript: true
 
   alias ExCLI.Argument
-  alias InvoiceTracker.{Config, DefaultDate, Invoice, Repo, TableFormatter}
+  alias InvoiceTracker.{
+    Config,
+    DefaultDate,
+    Invoice,
+    InvoiceReporter,
+    Repo,
+    TimeReporter,
+    TimeTracker
+  }
 
   @config_file "~/.invoicerc"
   @default_invoice_file "invoices.ets"
@@ -49,6 +57,44 @@ defmodule InvoiceTracker.CLI do
     end
   end
 
+  command :generate do
+    description "Generates an invoice (eventually)"
+
+    option :api_token,
+      help: "The Toggl API token to use",
+      aliases: [:t]
+
+    option :workspace_id,
+      help: "The id of the workspace containing the time entries",
+      aliases: [:w]
+
+    option :client_id,
+      help: "The id of the client to invoice",
+      aliases: [:c]
+
+    option :date,
+      help: "The invoice date",
+      aliases: [:d],
+      process: &__MODULE__.process_date_option/3
+
+    run initial_context do
+      context = Map.merge(config(), initial_context)
+      context
+      |> time_summary
+      |> TimeReporter.format_summary
+      |> IO.write
+    end
+  end
+
+  defp time_summary(context) do
+    InvoiceTracker.time_summary(
+      TimeTracker.client(context.api_token),
+      invoice_date: context[:date] || DefaultDate.for_invoice(),
+      workspace_id: context.workspace_id,
+      client_id: context.client_id
+    )
+  end
+
   command :payment do
     description "Records a payment"
 
@@ -88,7 +134,7 @@ defmodule InvoiceTracker.CLI do
       context.all
       |> selected_invoices
       |> Enum.sort_by(&(&1.number))
-      |> TableFormatter.format_list
+      |> InvoiceReporter.format_list
       |> IO.write
     end
   end
@@ -117,7 +163,7 @@ defmodule InvoiceTracker.CLI do
       since
       |> InvoiceTracker.active_since
       |> Enum.sort_by(&(&1.number))
-      |> TableFormatter.format_status(date)
+      |> InvoiceReporter.format_status(date)
       |> IO.write
     end
   end

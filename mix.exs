@@ -16,7 +16,7 @@ defmodule InvoiceTracker.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger, :ssl]]
   end
 
   # Dependencies can be Hex packages:
@@ -35,7 +35,9 @@ defmodule InvoiceTracker.Mixfile do
       {:credo, "~> 0.6", only: [:dev, :test]},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
       {:number, "~> 0.5.1"},
+      {:poison, "~> 3.1"},
       {:table_rex, "~> 0.10"},
+      {:tesla, "~> 0.7"},
       {:timex, "~> 3.1"},
       {:tzdata, "~> 0.1.8", override: true}
     ]

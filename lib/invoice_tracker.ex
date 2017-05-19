@@ -3,7 +3,7 @@ defmodule InvoiceTracker do
   Track invoices and payments.
   """
 
-  alias InvoiceTracker.{Invoice, Repo}
+  alias InvoiceTracker.{Invoice, Repo, TimeTracker}
 
   @doc """
   Return a list of all invoices
@@ -71,5 +71,35 @@ defmodule InvoiceTracker do
   """
   def pay(number, date) do
     Repo.update(number, &(Invoice.pay(&1, date)))
+  end
+
+  @doc """
+  Provide a time entry summary for an invoice.
+  """
+  def time_summary(time_tracker,
+    invoice_date: invoice_date,
+    workspace_id: workspace_id,
+    client_id: client_id
+  ) do
+    TimeTracker.summary(
+      time_tracker,
+      start_date: invoice_start_date(invoice_date),
+      end_date: invoice_end_date(invoice_date),
+      workspace_id: workspace_id,
+      client_id: client_id
+    )
+  end
+
+  defp invoice_start_date(invoice_date) do
+    end_date = invoice_end_date(invoice_date)
+    if end_date.day >= 16 do
+      %{end_date | day: 16}
+    else
+      %{end_date | day: 1}
+    end
+  end
+
+  defp invoice_end_date(invoice_date) do
+    Timex.shift(invoice_date, days: -1)
   end
 end

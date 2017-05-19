@@ -1,8 +1,8 @@
-defmodule TableFormatterTest do
+defmodule InvoiceReporterTest do
   @moduledoc false
 
   use ExUnit.Case
-  alias InvoiceTracker.{Invoice, TableFormatter}
+  alias InvoiceTracker.{Invoice, InvoiceReporter}
 
   describe "with no invoices" do
     setup do
@@ -10,12 +10,12 @@ defmodule TableFormatterTest do
     end
 
     test "reports that the list is empty", %{invoices: invoices} do
-      output = TableFormatter.format_list(invoices)
+      output = InvoiceReporter.format_list(invoices)
       assert output == "No invoices found\n"
     end
 
     test "reports that the status report is empty", %{invoices: invoices} do
-      output = TableFormatter.format_status(invoices, ~D[2017-03-30])
+      output = InvoiceReporter.format_status(invoices, ~D[2017-03-30])
       assert output == "No active invoices\n"
     end
   end
@@ -36,7 +36,7 @@ defmodule TableFormatterTest do
     end
 
     test "nicely formats the list", %{invoices: invoices} do
-      output = TableFormatter.format_list(invoices)
+      output = InvoiceReporter.format_list(invoices)
       assert output == """
       +------------+-----+------------+------------+
       |    Date    |  #  |   Amount   |    Paid    |
@@ -49,7 +49,7 @@ defmodule TableFormatterTest do
     end
 
     test "nicely formats the status report", %{invoices: invoices} do
-      output = TableFormatter.format_status(invoices, ~D[2017-01-15])
+      output = InvoiceReporter.format_status(invoices, ~D[2017-01-15])
       assert output == """
       +--------------------------------------------------------------------------+
       |                     Invoice status as of 2017-01-15                      |

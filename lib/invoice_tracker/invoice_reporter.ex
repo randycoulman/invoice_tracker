@@ -1,4 +1,4 @@
-defmodule InvoiceTracker.TableFormatter do
+defmodule InvoiceTracker.InvoiceReporter do
   @moduledoc """
   Formats a list of invoices into an ASCII table
   """

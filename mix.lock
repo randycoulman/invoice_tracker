@@ -13,7 +13,9 @@
   "mimerl": {:hex, :mimerl, "1.0.2", "993f9b0e084083405ed8252b99460c4f0563e41729ab42d9074fd5e52439be88", [:rebar3], []},
   "mix_test_watch": {:hex, :mix_test_watch, "0.3.3", "70859889a8d1d43d1b75d69d87258a301f43209a17787cdb2bd9cab42adf271d", [:mix], [{:fs, "~> 2.12", [hex: :fs, optional: false]}]},
   "number": {:hex, :number, "0.5.1", "41c41d6437d1bfe33df3c3ba27bd0e72a55d72bc7649882453c3d1ee494157ca", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, optional: false]}]},
+  "poison": {:hex, :poison, "3.1.0", "d9eb636610e096f86f25d9a46f35a9facac35609a7591b3be3326e99a0484665", [:mix], []},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], []},
   "table_rex": {:hex, :table_rex, "0.10.0", "d981954370c00645c32ff7719c105db90ba6a9aa3e951c4d68eaeae3e0bfd40f", [:mix], []},
+  "tesla": {:hex, :tesla, "0.7.0", "72b222933e58161a47def18d99fd81fd7ad736b934e462eaefd7931ae1d8b648", [:mix], [{:exjsx, ">= 0.1.0", [hex: :exjsx, optional: true]}, {:fuse, "~> 2.4", [hex: :fuse, optional: true]}, {:hackney, "~> 1.6", [hex: :hackney, optional: true]}, {:ibrowse, "~> 4.2", [hex: :ibrowse, optional: true]}, {:poison, ">= 1.0.0", [hex: :poison, optional: true]}]},
   "timex": {:hex, :timex, "3.1.13", "48b33162e3ec33e9a08fb5f98e3f3c19c3e328dded3156096c1969b77d33eef0", [:mix], [{:combine, "~> 0.7", [hex: :combine, optional: false]}, {:gettext, "~> 0.10", [hex: :gettext, optional: false]}, {:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, optional: false]}]},
   "tzdata": {:hex, :tzdata, "0.1.201605", "0c4184819b9d6adedcc02107b68321c45d8e853def7a32629b7961b9f2e95f33", [:mix], []}}
