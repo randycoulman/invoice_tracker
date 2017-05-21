@@ -27,7 +27,7 @@ defmodule TimeReporterTest do
       +-----------------+-------+
       | First Project   |   7.4 |
       | Another Project |   3.9 |
-      |                 |       |
+      +-----------------+-------+
       | TOTAL           |  11.3 |
       +-----------------+-------+
       """
