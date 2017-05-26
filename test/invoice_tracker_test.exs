@@ -1,8 +1,11 @@
 defmodule InvoiceTrackerTest do
   @moduledoc false
 
-  use ExUnit.Case
-  alias InvoiceTracker.{Invoice, Repo}
+  use ExUnit.Case, async: false
+
+  import Mock
+
+  alias InvoiceTracker.{Invoice, Repo, TimeSummary, TimeTracker}
 
   setup do
     Repo.start_link_in_memory()
@@ -104,6 +107,22 @@ defmodule InvoiceTrackerTest do
       InvoiceTracker.pay(invoice.number, ~D{2017-02-08})
       updated = make_invoice(paid_on: ~D{2017-02-08})
       assert InvoiceTracker.lookup(invoice.number) == updated
+    end
+  end
+
+  describe "preparing a time summary" do
+    test_with_mock "infers start and end dates from invoice date",
+        TimeTracker, [summary: fn(_, _) -> %TimeSummary{} end] do
+      InvoiceTracker.time_summary(nil,
+        invoice_date: ~D{2017-05-16},
+        workspace_id: 1,
+        client_id: 2)
+      assert called TimeTracker.summary(nil,
+        start_date: ~D{2017-05-01},
+        end_date: ~D{2017-05-15},
+        workspace_id: 1,
+        client_id: 2
+      )
     end
   end
 
