@@ -3,8 +3,7 @@ defmodule InvoiceTracker.TimeTracker do
   Retrieves time entry data from a time-tracking service
   """
 
-  alias InvoiceTracker.{ProjectTimeSummary, TimeSummary}
-  alias Timex.Duration
+  alias InvoiceTracker.{TogglResponse}
 
   use Tesla, only: [:get], docs: false
 
@@ -36,24 +35,7 @@ defmodule InvoiceTracker.TimeTracker do
     ]
     time_tracker
     |> get("/summary", query: query)
-    |> process_response
-  end
-
-  defp process_response(%{body: response}) do
-    total = to_duration(response["total_grand"])
-    projects = Enum.map(response["data"], &to_project/1)
-
-    %TimeSummary{total: total, projects: projects}
-  end
-
-  defp to_project(entry) do
-    %ProjectTimeSummary{
-      name: entry["title"]["project"],
-      time: to_duration(entry["time"])
-    }
-  end
-
-  defp to_duration(milliseconds) do
-    Duration.from_milliseconds(milliseconds)
+    |> Map.get(:body)
+    |> TogglResponse.to_summary
   end
 end
