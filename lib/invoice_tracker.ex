@@ -79,15 +79,17 @@ defmodule InvoiceTracker do
   def time_summary(time_tracker,
     invoice_date: invoice_date,
     workspace_id: workspace_id,
-    client_id: client_id
+    client_id: client_id,
+    rate: rate
   ) do
-    TimeTracker.summary(
+    summary = TimeTracker.summary(
       time_tracker,
       start_date: invoice_start_date(invoice_date),
       end_date: invoice_end_date(invoice_date),
       workspace_id: workspace_id,
       client_id: client_id
     )
+    %{summary | rate: rate}
   end
 
   defp invoice_start_date(invoice_date) do

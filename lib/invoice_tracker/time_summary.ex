@@ -5,7 +5,7 @@ defmodule InvoiceTracker.TimeSummary do
 
   alias Timex.Duration
 
-  defstruct total: Duration.zero(), projects: []
+  defstruct total: Duration.zero(), rate: 0, projects: []
 end
 
 defmodule InvoiceTracker.ProjectTimeSummary do

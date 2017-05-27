@@ -77,6 +77,10 @@ defmodule InvoiceTracker.CLI do
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
 
+    option :rate,
+      help: "The hourly rate to charge",
+      aliases: [:r]
+
     run initial_context do
       context = Map.merge(config(), initial_context)
       context
@@ -91,7 +95,8 @@ defmodule InvoiceTracker.CLI do
       TimeTracker.client(context.api_token),
       invoice_date: context[:date] || DefaultDate.for_invoice(),
       workspace_id: context.workspace_id,
-      client_id: context.client_id
+      client_id: context.client_id,
+      rate: String.to_integer(context.rate)
     )
   end
 
