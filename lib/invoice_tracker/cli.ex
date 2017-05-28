@@ -31,6 +31,7 @@ defmodule InvoiceTracker.CLI do
     aliases: [:f]
 
   command :record do
+    aliases [:rec, :r]
     description "Records an invoice"
 
     argument :amount, type: :float
@@ -58,6 +59,7 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :generate do
+    aliases [:gen, :g]
     description "Generates an invoice (eventually)"
 
     option :api_token,
@@ -101,6 +103,7 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :payment do
+    aliases [:pay, :p]
     description "Records a payment"
 
     option :number,
@@ -124,6 +127,7 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :list do
+    aliases [:ls, :l]
     description "List invoices"
 
     option :all,
@@ -148,6 +152,7 @@ defmodule InvoiceTracker.CLI do
   defp selected_invoices(_), do: InvoiceTracker.unpaid()
 
   command :status do
+    aliases [:stat, :st, :s]
     description "Show an invoice status report"
 
     option :date,

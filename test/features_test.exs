@@ -61,7 +61,7 @@ defmodule FeaturesTest do
   end
 
   defp record_invoice(file, number, amount, date) do
-    run("record", file, [amount, "--date", date, "--number", number])
+    run("rec", file, [amount, "--date", date, "--number", number])
   end
 
   defp record_payment(file, date) do
@@ -69,7 +69,7 @@ defmodule FeaturesTest do
   end
 
   defp record_payment(file, number, date) do
-    run("payment", file, ["--number", number, "--date", date])
+    run("pay", file, ["--number", number, "--date", date])
   end
 
   defp list_invoices(file) do
@@ -77,7 +77,7 @@ defmodule FeaturesTest do
   end
 
   defp list_all_invoices(file) do
-    run("list", file, ["--all"])
+    run("ls", file, ["--all"])
   end
 
   defp invoice_status(file, status_date, previous_date) do
