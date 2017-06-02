@@ -16,5 +16,16 @@ defmodule InvoiceTracker.ProjectTimeSummary do
 
   alias Timex.Duration
 
-  defstruct name: "", time: Duration.zero()
+  defstruct name: "", time: Duration.zero(), details: []
+end
+
+defmodule InvoiceTracker.Detail do
+  @moduledoc """
+  A struct that represents a project activity detail entry for an
+  invoice period.
+  """
+
+  alias Timex.Duration
+
+  defstruct activity: "", time: Duration.zero()
 end

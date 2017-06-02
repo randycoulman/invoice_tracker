@@ -3,7 +3,7 @@ defmodule InvoiceTracker.TogglResponse do
   Process responses from Toggle API calls.
   """
 
-  alias InvoiceTracker.{ProjectTimeSummary, TimeSummary}
+  alias InvoiceTracker.{Detail, ProjectTimeSummary, TimeSummary}
   alias Timex.Duration
 
   def to_summary(response) do
@@ -15,8 +15,16 @@ defmodule InvoiceTracker.TogglResponse do
 
   defp to_project(entry) do
     %ProjectTimeSummary{
-      name: entry["title"]["project"],
-      time: to_duration(entry["time"])
+      name: get_in(entry, ["title", "project"]),
+      time: to_duration(entry["time"]),
+      details: Enum.map(entry["items"], &to_detail/1)
+    }
+  end
+
+  defp to_detail(item) do
+    %Detail{
+      activity: get_in(item, ["title", "time_entry"]),
+      time: to_duration(item["time"])
     }
   end
 
