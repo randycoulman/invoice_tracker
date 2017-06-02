@@ -19,6 +19,26 @@ defmodule InvoiceTracker.TimeReporter do
     |> add_footer_separator
   end
 
+  def format_details(%{projects: projects}) do
+    """
+    ## Included
+
+    #{projects |> Enum.map(&project_section/1) |> Enum.join("\n\n")}
+    """
+  end
+
+  defp project_section(project) do
+    """
+    ### #{project.name}
+
+    #{project.details |> Enum.map(&detail_line/1) |> Enum.join("\n\n")}
+    """ |> String.trim_trailing
+  end
+
+  defp detail_line(%{activity: activity, time: time}) do
+    "- #{activity} (#{format_hours(time)} hrs)"
+  end
+
   defp project_row(%{name: name, time: time}, rate) do
     [format_hours(time), name, rate, format_amount(time, rate)]
   end

@@ -2,25 +2,38 @@ defmodule TimeReporterTest do
   @moduledoc false
 
   use ExUnit.Case
-  alias InvoiceTracker.{ProjectTimeSummary, TimeReporter, TimeSummary}
+  alias InvoiceTracker.{Detail, ProjectTimeSummary, TimeReporter, TimeSummary}
   alias Timex.Duration
 
   describe "time summary" do
-    test "nicely formats the summary" do
+    setup do
       summary = %TimeSummary{
         total: Duration.from_minutes(676),
         rate: 100,
         projects: [
           %ProjectTimeSummary{
             name: "First Project",
-            time: Duration.from_minutes(444)
+            time: Duration.from_minutes(444),
+            details: [
+              %Detail{activity: "Activity 1", time: Duration.from_minutes(126)},
+              %Detail{activity: "Activity 2", time: Duration.from_minutes(318)}
+            ]
           },
           %ProjectTimeSummary{
             name: "Another Project",
-            time: Duration.from_minutes(232)
+            time: Duration.from_minutes(232),
+            details: [
+              %Detail{
+                activity: "All the things", time: Duration.from_minutes(232)
+              }
+            ]
           }
         ]
       }
+      {:ok, [summary: summary]}
+    end
+
+    test "nicely formats the summary", %{summary: summary} do
       output = TimeReporter.format_summary(summary)
       assert output == """
       +-------+-----------------+------+----------+
@@ -31,6 +44,23 @@ defmodule TimeReporterTest do
       +-------+-----------------+------+----------+
       |  11.3 | TOTAL           |      | 1,130.00 |
       +-------+-----------------+------+----------+
+      """
+    end
+
+    test "nicely formats the details", %{summary: summary} do
+      output = TimeReporter.format_details(summary)
+      assert output == ~S"""
+      ## Included
+
+      ### First Project
+
+      - Activity 1 (2.1 hrs)
+
+      - Activity 2 (5.3 hrs)
+
+      ### Another Project
+
+      - All the things (3.9 hrs)
       """
     end
   end
