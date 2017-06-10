@@ -13,6 +13,7 @@ defmodule InvoiceTracker.CLI do
     InvoiceReporter,
     Repo,
     TimeReporter,
+    TimeSummary,
     TimeTracker
   }
 
@@ -85,7 +86,7 @@ defmodule InvoiceTracker.CLI do
 
     run initial_context do
       context = Map.merge(config(), initial_context)
-      summary = time_summary(context)
+      summary = context |> time_summary |> TimeSummary.rounded
       summary
       |> TimeReporter.format_summary
       |> IO.write
