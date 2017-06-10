@@ -16,6 +16,12 @@ defmodule RoundingTest do
     end
   end
 
+  describe "computing charges" do
+    test "rounds to nearest tenth before calculating" do
+      assert Rounding.charge(Duration.from_minutes(118), 100) == 200
+    end
+  end
+
   describe "reconciling entries" do
     test "rounds entries with no adjustments needed" do
       assert reconcile([14.9, 15], 0.5) == [0.2, 0.3]

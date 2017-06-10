@@ -8,7 +8,6 @@ defmodule TimeSummaryTest do
   setup do
     summary = %TimeSummary{
       total: Duration.from_minutes(464),
-      rate: 100,
       projects: [
         %ProjectTimeSummary{
           name: "First Project",

@@ -116,8 +116,7 @@ defmodule InvoiceTrackerTest do
       InvoiceTracker.time_summary(nil,
         invoice_date: ~D{2017-05-16},
         workspace_id: 1,
-        client_id: 2,
-        rate: 100
+        client_id: 2
       )
       assert called TimeTracker.summary(nil,
         start_date: ~D{2017-05-01},
@@ -125,17 +124,6 @@ defmodule InvoiceTrackerTest do
         workspace_id: 1,
         client_id: 2
       )
-    end
-
-    test_with_mock "injects the rate into the summary",
-        TimeTracker, [summary: fn(_, _) -> %TimeSummary{} end] do
-      summary = InvoiceTracker.time_summary(nil,
-        invoice_date: ~D{2017-05-16},
-        workspace_id: 1,
-        client_id: 2,
-        rate: 100
-      )
-      assert summary.rate == 100
     end
   end
 

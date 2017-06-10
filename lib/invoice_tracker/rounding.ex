@@ -15,15 +15,18 @@ defmodule InvoiceTracker.Rounding do
 
   alias Timex.Duration
 
+  def round_time(time), do: time |> to_tenths |> round |> from_tenths
+
+  def charge(time, rate) do
+    time |> round_time |> Duration.to_hours |> Kernel.*(rate)
+  end
+
   def reconcile(entries, total) do
     entries
     |> Enum.map(&rounded/1)
     |> Enum.zip(adjustments(entries, total))
     |> Enum.map(&apply_adjustment/1)
   end
-
-  # This algorithm seems to be more accurate than `Float.round(time, 0.1)`.
-  def round_time(time), do: time |> to_tenths |> round |> from_tenths
 
   defp rounded(entry) do
     Map.update!(entry, :time, &round_time/1)

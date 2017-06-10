@@ -12,6 +12,7 @@ defmodule InvoiceTracker.CLI do
     Invoice,
     InvoiceReporter,
     Repo,
+    Rounding,
     TimeReporter,
     TimeSummary,
     TimeTracker
@@ -48,15 +49,20 @@ defmodule InvoiceTracker.CLI do
       type: :integer
 
     run initial_context do
-      context = Map.merge(config(), initial_context)
-      start_repo(context)
-      invoice = %Invoice{
-        number: context[:number] || InvoiceTracker.next_invoice_number(),
-        amount: context.amount,
-        date: context[:date] || DefaultDate.for_invoice()
-      }
-      InvoiceTracker.record(invoice)
+      config()
+      |> Map.merge(initial_context)
+      |> record_invoice
     end
+  end
+
+  defp record_invoice(context) do
+    start_repo(context)
+    invoice = %Invoice{
+      number: context[:number] || InvoiceTracker.next_invoice_number(),
+      amount: context.amount,
+      date: context[:date] || DefaultDate.for_invoice()
+    }
+    InvoiceTracker.record(invoice)
   end
 
   command :generate do
@@ -80,20 +86,30 @@ defmodule InvoiceTracker.CLI do
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
 
+    option :number,
+      help: "The invoice number (default is next highest number)",
+      aliases: [:n],
+      type: :integer
+
     option :rate,
       help: "The hourly rate to charge",
       aliases: [:r]
 
+    option :save,
+      help: "Record the generated invoice",
+      aliases: [:s],
+      type: :boolean,
+      default: false
+
     run initial_context do
       context = Map.merge(config(), initial_context)
       summary = context |> time_summary |> TimeSummary.rounded
-      summary
-      |> TimeReporter.format_summary
-      |> IO.write
-      IO.puts ""
-      summary
-      |> TimeReporter.format_details
-      |> IO.write
+      rate = String.to_integer(context.rate)
+      show_summary(summary, rate)
+      if context.save do
+        amount = Rounding.charge(summary.total, rate)
+        record_invoice(Map.put(context, :amount, amount))
+      end
     end
   end
 
@@ -102,9 +118,20 @@ defmodule InvoiceTracker.CLI do
       TimeTracker.client(context.api_token),
       invoice_date: context[:date] || DefaultDate.for_invoice(),
       workspace_id: context.workspace_id,
-      client_id: context.client_id,
-      rate: String.to_integer(context.rate)
+      client_id: context.client_id
     )
+  end
+
+  defp show_summary(summary, rate) do
+    summary
+    |> TimeReporter.format_summary(rate: rate)
+    |> IO.write
+
+    IO.puts ""
+
+    summary
+    |> TimeReporter.format_details
+    |> IO.write
   end
 
   command :payment do

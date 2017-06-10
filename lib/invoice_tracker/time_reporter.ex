@@ -3,11 +3,12 @@ defmodule InvoiceTracker.TimeReporter do
   Formats a time summary into an ASCII table
   """
 
+  alias InvoiceTracker.Rounding
   alias Number.Delimit
   alias TableRex.Table
   alias Timex.Duration
 
-  def format_summary(%{total: total, rate: rate, projects: projects}) do
+  def format_summary(%{total: total, projects: projects}, rate: rate) do
     projects
     |> Enum.map(&(project_row(&1, rate)))
     |> Table.new
@@ -63,9 +64,7 @@ defmodule InvoiceTracker.TimeReporter do
 
   defp format_amount(duration, rate) do
     duration
-    |> Duration.to_hours
-    |> Float.round(1)
-    |> Kernel.*(rate)
+    |> Rounding.charge(rate)
     |> Delimit.number_to_delimited(precision: 2)
   end
 end

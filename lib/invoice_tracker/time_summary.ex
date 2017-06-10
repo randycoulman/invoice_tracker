@@ -6,7 +6,7 @@ defmodule InvoiceTracker.TimeSummary do
   alias InvoiceTracker.{ProjectTimeSummary, Rounding}
   alias Timex.Duration
 
-  defstruct total: Duration.zero(), rate: 0, projects: []
+  defstruct total: Duration.zero(), projects: []
 
   def rounded(summary) do
     summary

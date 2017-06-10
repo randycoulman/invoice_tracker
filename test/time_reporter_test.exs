@@ -9,7 +9,6 @@ defmodule TimeReporterTest do
     setup do
       summary = %TimeSummary{
         total: Duration.from_minutes(676),
-        rate: 100,
         projects: [
           %ProjectTimeSummary{
             name: "First Project",
@@ -34,7 +33,7 @@ defmodule TimeReporterTest do
     end
 
     test "nicely formats the summary", %{summary: summary} do
-      output = TimeReporter.format_summary(summary)
+      output = TimeReporter.format_summary(summary, rate: 100)
       assert output == """
       +-------+-----------------+------+----------+
       | Hours |     Project     | Rate |  Amount  |
