@@ -8,6 +8,15 @@ defmodule InvoiceTracker.TimeSummary do
 
   defstruct total: Duration.zero(), projects: []
 
+  @doc """
+  Rounds all of the times in the summary to the nearest tenth of an hour.
+
+  Also reconciles project and detail entries so that, when rounded, they add
+  up to the total (rounded) time.
+
+  A TimeSummary should be rounded before reporting on it or generating an
+  invoice for it.
+  """
   def rounded(summary) do
     summary
     |> Map.update!(:total, &Rounding.round_time/1)
@@ -32,6 +41,15 @@ defmodule InvoiceTracker.ProjectTimeSummary do
 
   defstruct name: "", time: Duration.zero(), details: []
 
+  @doc """
+  Reconciles a list of projects with a rounded total time.
+
+  Times are rounded to the nearest tenth of an hour and then adjusted so that,
+  when rounded, they add up to the total (rounded) time.
+
+  Each project's details are also reconciled and rounded in the same way once
+  the projects themselves have been reconciled and rounded.
+  """
   def reconciled(projects, total) do
     projects
     |> Rounding.reconcile(total)
@@ -54,5 +72,11 @@ defmodule InvoiceTracker.Detail do
 
   defstruct activity: "", time: Duration.zero()
 
+  @doc """
+  Reconciles a list of detail entries with a rounded total time.
+
+  Times are rounded to the nearest tenth of an hour and then adjusted so that,
+  when rounded, they add up to the total (rounded) time.
+  """
   def reconciled(details, total), do: Rounding.reconcile(details, total)
 end

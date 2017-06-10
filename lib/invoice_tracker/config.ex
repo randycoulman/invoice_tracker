@@ -3,6 +3,12 @@ defmodule InvoiceTracker.Config do
   Process a configuration file and return a map containing the config settings.
   """
 
+  @doc """
+  Read a configuration file into a map.
+
+  The configuration file contains lines of `key = value` pairs.
+  Blank lines are ignored; there is currently no comment character recognized.
+  """
   def read io do
     io
     |> IO.stream(:line)

@@ -7,6 +7,12 @@ defmodule InvoiceTracker.InvoiceReporter do
   alias Number.Delimit
   alias TableRex.Table
 
+  @doc """
+  Generate a tabular list of invoices suitable for human consumption.
+
+  Shows the invoice date and number, along with the amount and whether or not
+  the invoice has been paid.
+  """
   def format_list([]), do: "No invoices found\n"
   def format_list(invoices) do
     invoices
@@ -24,6 +30,12 @@ defmodule InvoiceTracker.InvoiceReporter do
     [date, number, format_amount(amount), paid_on]
   end
 
+  @doc """
+  Generate a tabular invoice status report suitable for human consumption.
+
+  Shows the invoice date and number, along with the amount, due date, payment
+  date (if paid), and status as of the report date.
+  """
   def format_status([], _date), do: "No active invoices\n"
   def format_status(invoices, date) do
     invoices

@@ -13,6 +13,12 @@ defmodule InvoiceTracker.TimeTracker do
   ]
   plug Tesla.Middleware.JSON
 
+  @doc """
+  Returns an authenticated client for the time-tracking service.
+
+  This client can then be passed to `summary/2` in order to retrieve a time
+  summary.
+  """
   def client(api_token) do
     encoded_token = Base.encode64("#{api_token}:api_token")
     Tesla.build_client [
@@ -20,6 +26,12 @@ defmodule InvoiceTracker.TimeTracker do
     ]
   end
 
+  @doc """
+  Retrieve a summary report from the time-tracking service.
+
+  - `time_tracker` is an authenticated client for the time-tracking service,
+    created with `client/1`.
+  """
   def summary(
     time_tracker,
     start_date: start_date,

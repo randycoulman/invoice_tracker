@@ -210,6 +210,7 @@ defmodule InvoiceTracker.CLI do
     end
   end
 
+  @doc false
   def process_date_option(option, context, [{:arg, value} | rest]) do
     date = Date.from_iso8601!(value)
     {:ok, Map.put(context, Argument.key(option), date), rest}

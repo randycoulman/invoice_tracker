@@ -1,26 +1,49 @@
 defmodule InvoiceTracker.Rounding do
   @moduledoc """
-  Rounds times to the nearest tenth of an hour.  Reconciles rounded time entries
-  with a total time such that a list of entries, when rounded, will add up to a
-  total number of hours, when rounded to the nearest tenth of an hour.
+  Perform various calculations on times by rounding to the nearest tenth of an
+  hour.
 
-  The basic approach is to figure out how many tenths of an hour need to be
-  accounted for (up or down), then choose that number of entries to adjust.
+  Operations are provided to:
 
-  To find the entries, sort them based on their "rounding weight": how close
-  was an entry to rounding up?  For adjusting up, take the entries with the
-  highest rounding weight; for adjusting down, take the entries that were
-  furthest from rounding up.
+  - Round a time to the nearest tenth of an hour
+
+  - Compute a charge amount given a rate
+
+  - Adjust the rounding a list of time entries with a total time such that a
+    summary report or invoice will look correct when all time entries are
+    rounded.
   """
 
   alias Timex.Duration
 
+  @doc """
+  Round a time to the nearest tenth of an hour.
+  """
   def round_time(time), do: time |> to_tenths |> round |> from_tenths
 
+  @doc """
+  Compute the amount to charge for a time given a rate.
+
+  First rounds the time to the nearest tenth of an hour, then computes the
+  charge.
+  """
   def charge(time, rate) do
     time |> round_time |> Duration.to_hours |> Kernel.*(rate)
   end
 
+  @doc """
+  Reconciles time entries with a total time such that the list of entries, when
+  rounded, will add up to the total time when rounded to the nearest tenth of an
+  hour.
+
+  The basic approach is to figure out how many tenths of an hour need to be
+  accounted for (up or down), then choose that number of entries to adjust.
+
+  To find the entries, sort them based on their "rounding weight": how close was
+  an entry to rounding up?  For adjusting up, take the entries with the highest
+  rounding weight; for adjusting down, take the entries that were furthest from
+  rounding up.
+  """
   def reconcile(entries, total) do
     entries
     |> Enum.map(&rounded/1)

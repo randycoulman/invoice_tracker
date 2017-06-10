@@ -1,6 +1,6 @@
 defmodule InvoiceTracker.TimeReporter do
   @moduledoc """
-  Formats a time summary into an ASCII table
+  Report on the time entries that make up an invoice.
   """
 
   alias InvoiceTracker.Rounding
@@ -8,6 +8,14 @@ defmodule InvoiceTracker.TimeReporter do
   alias TableRex.Table
   alias Timex.Duration
 
+  @doc """
+  Generate a tabular summary of an invoice.
+
+  Reports the time spent on each project, as well as the billing rate and total
+  charge.  Also includes a grand total of time and amount.
+
+  This report is suitable for generating the line items on an invoice.
+  """
   def format_summary(%{total: total, projects: projects}, rate: rate) do
     projects
     |> Enum.map(&(project_row(&1, rate)))
@@ -20,6 +28,17 @@ defmodule InvoiceTracker.TimeReporter do
     |> add_footer_separator
   end
 
+  @doc """
+  Report on detailed time entries for an invoice.
+
+  Generates a Markdown-format summary of time spent during an invoice period.
+
+  Entries are separated by project, and each entry shows the title of the time
+  entry along with the time spent.
+
+  This report is suitable as a starting point for an e-mail outlining the work
+  accomplished during the invoice period.
+  """
   def format_details(%{projects: projects}) do
     """
     ## Included

@@ -6,6 +6,9 @@ defmodule InvoiceTracker.TogglResponse do
   alias InvoiceTracker.{Detail, ProjectTimeSummary, TimeSummary}
   alias Timex.Duration
 
+  @doc """
+  Parse a response from the Toggl API into a TimeSummary.
+  """
   def to_summary(response) do
     %TimeSummary{
       total: to_duration(response["total_grand"]),
