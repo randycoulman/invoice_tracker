@@ -13,6 +13,7 @@ defmodule InvoiceTracker.InvoiceReporter do
   Shows the invoice date and number, along with the amount and whether or not
   the invoice has been paid.
   """
+  @spec format_list([Invoice.t]) :: String.t
   def format_list([]), do: "No invoices found\n"
   def format_list(invoices) do
     invoices
@@ -36,6 +37,7 @@ defmodule InvoiceTracker.InvoiceReporter do
   Shows the invoice date and number, along with the amount, due date, payment
   date (if paid), and status as of the report date.
   """
+  @spec format_status([Invoice.t], Date.t) :: String.t
   def format_status([], _date), do: "No active invoices\n"
   def format_status(invoices, date) do
     invoices

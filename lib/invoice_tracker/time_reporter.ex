@@ -3,7 +3,7 @@ defmodule InvoiceTracker.TimeReporter do
   Report on the time entries that make up an invoice.
   """
 
-  alias InvoiceTracker.Rounding
+  alias InvoiceTracker.{Detail, Rounding, ProjectTimeSummary, TimeSummary}
   alias Number.Delimit
   alias TableRex.Table
   alias Timex.Duration
@@ -16,10 +16,12 @@ defmodule InvoiceTracker.TimeReporter do
 
   This report is suitable for generating the line items on an invoice.
   """
-  def format_summary(%{total: total, projects: projects}, rate: rate) do
-    projects
-    |> Enum.map(&(project_row(&1, rate)))
-    |> Table.new
+  @spec format_summary(TimeSummary.t, [{:rate, number}]) :: String.t
+  def format_summary(
+    %TimeSummary{total: total, projects: projects}, rate: rate
+  ) do
+    Table.new()
+    |> Table.add_rows(project_rows(projects, rate))
     |> Table.put_header(["Hours", "Project", "Rate", "Amount"])
     |> Table.put_header_meta(0..3, align: :center)
     |> Table.put_column_meta([0, 2, 3], align: :right)
@@ -39,7 +41,8 @@ defmodule InvoiceTracker.TimeReporter do
   This report is suitable as a starting point for an e-mail outlining the work
   accomplished during the invoice period.
   """
-  def format_details(%{projects: projects}) do
+  @spec format_details(TimeSummary.t) :: String.t
+  def format_details(%TimeSummary{projects: projects}) do
     """
     ## Included
 
@@ -55,11 +58,15 @@ defmodule InvoiceTracker.TimeReporter do
     """ |> String.trim_trailing
   end
 
-  defp detail_line(%{activity: activity, time: time}) do
+  defp detail_line(%Detail{activity: activity, time: time}) do
     "- #{activity} (#{format_hours(time)} hrs)"
   end
 
-  defp project_row(%{name: name, time: time}, rate) do
+  defp project_rows(projects, rate) do
+    Enum.map(projects, &(project_row(&1, rate)))
+  end
+
+  defp project_row(%ProjectTimeSummary{name: name, time: time}, rate) do
     [format_hours(time), name, rate, format_amount(time, rate)]
   end
 

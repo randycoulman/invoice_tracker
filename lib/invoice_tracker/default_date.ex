@@ -11,6 +11,7 @@ defmodule InvoiceTracker.DefaultDate do
   billing cycle, we jump forward to the next day.  This allows us to prepare
   invoices at the end of the last work-day of the billing cycle.
   """
+  @spec for_invoice(Date.t) :: Date.t
   def for_invoice(today \\ local_today()) do
     tomorrow = Timex.shift(today, days: 1)
     if tomorrow.day >= 16 do
@@ -23,6 +24,7 @@ defmodule InvoiceTracker.DefaultDate do
   @doc """
   Determine the payment date for an invoice; defaults to "today".
   """
+  @spec for_payment(Date.t) :: Date.t
   def for_payment(today \\ local_today()), do: today
 
   @doc """
@@ -31,8 +33,10 @@ defmodule InvoiceTracker.DefaultDate do
   Status reports are typically sent on Fridays, so we find the most recent
   Friday.
   """
+  @spec for_current_status(Date.t) :: Date.t
   def for_current_status(today \\ local_today()) do
-    Timex.beginning_of_week(today, :fri)
+    Timex.beginning_of_week(today, 5)
+    # Timex.beginning_of_week(today, :fri) -- fails Timex typespecs
   end
 
   @doc """
@@ -41,6 +45,7 @@ defmodule InvoiceTracker.DefaultDate do
   Status reports are typically every week, so this returns the date one week
   before the current status report date.
   """
+  @spec for_previous_status(Date.t) :: Date.t
   def for_previous_status(current_status_date) do
     Timex.shift(current_status_date, weeks: -1)
   end

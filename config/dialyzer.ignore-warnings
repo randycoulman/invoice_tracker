@@ -1,0 +1,11 @@
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Atom':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.BitString':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Float':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Function':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Integer':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.List':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Map':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.PID':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Port':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Reference':'__impl__'/1
+Unknown function 'Elixir.InvoiceTracker.TimeEntry.Tuple':'__impl__'/1

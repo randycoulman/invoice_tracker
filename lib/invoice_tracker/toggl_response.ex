@@ -9,6 +9,7 @@ defmodule InvoiceTracker.TogglResponse do
   @doc """
   Parse a response from the Toggl API into a TimeSummary.
   """
+  @spec to_summary(map) :: TimeSummary.t
   def to_summary(response) do
     %TimeSummary{
       total: to_duration(response["total_grand"]),

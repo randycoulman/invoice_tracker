@@ -14,11 +14,13 @@ defmodule InvoiceTracker.Rounding do
     rounded.
   """
 
+  alias InvoiceTracker.TimeEntry
   alias Timex.Duration
 
   @doc """
   Round a time to the nearest tenth of an hour.
   """
+  @spec round_time(Duration.t) :: Duration.t
   def round_time(time), do: time |> to_tenths |> round |> from_tenths
 
   @doc """
@@ -27,6 +29,7 @@ defmodule InvoiceTracker.Rounding do
   First rounds the time to the nearest tenth of an hour, then computes the
   charge.
   """
+  @spec charge(Duration.t, number) :: number
   def charge(time, rate) do
     time |> round_time |> Duration.to_hours |> Kernel.*(rate)
   end
@@ -44,6 +47,7 @@ defmodule InvoiceTracker.Rounding do
   rounding weight; for adjusting down, take the entries that were furthest from
   rounding up.
   """
+  @spec reconcile([TimeEntry.t], Duration.t) :: [TimeEntry.t]
   def reconcile(entries, total) do
     entries
     |> Enum.map(&rounded/1)

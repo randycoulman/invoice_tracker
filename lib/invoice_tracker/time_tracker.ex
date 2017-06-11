@@ -3,9 +3,17 @@ defmodule InvoiceTracker.TimeTracker do
   Retrieves time entry data from a time-tracking service
   """
 
-  alias InvoiceTracker.{TogglResponse}
+  alias InvoiceTracker.{TimeSummary, TogglResponse}
 
   use Tesla, only: [:get], docs: false
+
+  @type tracker :: Env.client
+
+  @type option ::
+    {:start_date, Date.t} |
+    {:end_date, Date.t} |
+    {:workspace_id, String.t} |
+    {:client_id, String.t}
 
   plug Tesla.Middleware.BaseUrl, "https://www.toggl.com/reports/api/v2"
   plug Tesla.Middleware.Query, [
@@ -19,6 +27,7 @@ defmodule InvoiceTracker.TimeTracker do
   This client can then be passed to `summary/2` in order to retrieve a time
   summary.
   """
+  @spec client(String.t) :: tracker
   def client(api_token) do
     encoded_token = Base.encode64("#{api_token}:api_token")
     Tesla.build_client [
@@ -32,6 +41,7 @@ defmodule InvoiceTracker.TimeTracker do
   - `time_tracker` is an authenticated client for the time-tracking service,
     created with `client/1`.
   """
+  @spec summary(tracker, [option]) :: TimeSummary.t
   def summary(
     time_tracker,
     start_date: start_date,

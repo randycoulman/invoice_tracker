@@ -9,6 +9,7 @@ defmodule InvoiceTracker.Config do
   The configuration file contains lines of `key = value` pairs.
   Blank lines are ignored; there is currently no comment character recognized.
   """
+  @spec read(IO.device) :: %{String.t => String.t}
   def read io do
     io
     |> IO.stream(:line)

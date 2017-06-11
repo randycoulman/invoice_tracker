@@ -5,9 +5,12 @@ defmodule InvoiceTracker.Repo do
 
   @agent __MODULE__
 
+  alias InvoiceTracker.Invoice
+
   @doc """
   Start the repository manager using in-memory term storage.
   """
+  @spec start_link_in_memory() :: Agent.on_start
   def start_link_in_memory do
     start_link(fn -> {:ets, :ets.new(__MODULE__, [])} end)
   end
@@ -15,11 +18,13 @@ defmodule InvoiceTracker.Repo do
   @doc """
   Start the repository manager using file-based term storage.
   """
+  @spec start_link_with_file(String.t) :: Agent.on_start
   def start_link_with_file(filename) do
     {:ok, table} = :dets.open_file(filename, [access: :read_write])
     start_link(fn -> {:dets, table} end)
   end
 
+  @spec start_link((() -> term)) :: Agent.on_start
   defp start_link(factory) do
     Agent.start_link(factory, name: @agent)
   end
@@ -27,6 +32,7 @@ defmodule InvoiceTracker.Repo do
   @doc """
   Return all of the stored invoices.
   """
+  @spec all() :: [Invoice.t]
   def all, do: Agent.get(@agent, &do_all/1)
 
   defp do_all({storage, table}) do
@@ -36,6 +42,7 @@ defmodule InvoiceTracker.Repo do
   @doc """
   Find an invoice by its number.
   """
+  @spec find(Invoice.key) :: {:ok, Invoice.t} | {:error, atom}
   def find(number), do: Agent.get(@agent, &do_find(&1, number))
 
   defp do_find({storage, table}, number) do
@@ -48,6 +55,7 @@ defmodule InvoiceTracker.Repo do
   @doc """
   Save an invoice into storage.
   """
+  @spec store(Invoice.t) :: :ok
   def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
 
   defp do_store({storage, table}, invoice) do
@@ -61,6 +69,7 @@ defmodule InvoiceTracker.Repo do
   Finds the invoice by its number, applies the updater function to it, and
   stores the result.
   """
+  @spec update(Invoice.key, ((Invoice.t) -> Invoice.t)) :: :ok
   def update(number, updater),
     do: Agent.update(@agent, &do_update(&1, number, updater))
 

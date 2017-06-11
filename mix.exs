@@ -1,4 +1,6 @@
 defmodule InvoiceTracker.Mixfile do
+  @moduledoc false
+
   use Mix.Project
 
   def project do
@@ -8,7 +10,9 @@ defmodule InvoiceTracker.Mixfile do
      escript: [main_module: InvoiceTracker.CLI, name: "invoice"],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps()]
+     deps: deps(),
+     dialyzer: [ignore_warnings: "config/dialyzer.ignore-warnings"]
+   ]
   end
 
   # Configuration for the OTP application
@@ -33,6 +37,7 @@ defmodule InvoiceTracker.Mixfile do
       {:briefly, "~> 0.3", only: :test},
       {:ex_cli, "~> 0.1.2"},
       {:credo, "~> 0.6", only: [:dev, :test]},
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
       {:mock, "~> 0.2.1", only: :test},
       {:number, "~> 0.5.1"},

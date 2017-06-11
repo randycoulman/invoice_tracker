@@ -19,4 +19,5 @@ dependencies:
 test:
   override:
     - mix credo
+    - mix dialyzer --halt-exit-status
     - mix test
