@@ -3,6 +3,8 @@ defmodule FeaturesTest do
 
   use ExUnit.Case, async: true
 
+  @moduletag :features
+
   setup_all do
     {_, 0} = System.cmd "mix", ["escript.build"]
     path = Briefly.create!(directory: true)

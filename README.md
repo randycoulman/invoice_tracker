@@ -148,6 +148,8 @@ This is a pretty standard Elixir project.  To work with it:
 
 You can run the tests with `mix test`.  If you'd like the tests to automatically run every time you make a change, use `mix test.watch`.
 
+If you want to skip the feature tests in order to get quicker turns while developing, you can use `mix test --exclude features` or `mix test.watch --exclude features`.  Make sure to run `mix test` at least once before committing your changes.
+
 The project is configured to use `credo` for linting, and `dialyxir` for type checking.  Run `mix credo` and `mix dialyzer` respectively to run those checks.
 
 A development version of the escript will be built automatically when running the tests because the feature tests run against the actual CLI application.
