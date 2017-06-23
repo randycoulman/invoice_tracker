@@ -35,8 +35,7 @@ defmodule InvoiceTracker.DefaultDate do
   """
   @spec for_current_status(Date.t) :: Date.t
   def for_current_status(today \\ local_today()) do
-    Timex.beginning_of_week(today, 5)
-    # Timex.beginning_of_week(today, :fri) -- fails Timex typespecs
+    Timex.beginning_of_week(today, :fri)
   end
 
   @doc """
