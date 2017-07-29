@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/elixir:1.4.5
+    resource_class: medium+
     steps:
       - checkout
       - restore_cache:
