@@ -17,8 +17,7 @@ jobs:
       - run: mix deps.compile
       - run: mix compile
       - save_cache:
-          keys:
-            - v1-dependency-cache-{{ checksum "mix.lock" }}
+          key: v1-dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - deps
@@ -29,8 +28,7 @@ jobs:
       #       - v1-plt-cache
       # - run: mix dialyzer --plt
       # - save_cache:
-      #     keys:
-      #       - v1-plt-cache-{{ checksum "mix.lock" }}
+      #     key: v1-plt-cache-{{ checksum "mix.lock" }}
       #     paths:
       #       - ~/.mix
       # - run: mix dialyzer --halt-exit-status
