@@ -35,6 +35,6 @@ jobs:
       #     key: v1-plt-cache-{{ checksum "mix.lock" }}
       #     paths:
       #       - ~/.mix
-      - run: mix dialyzer --halt-exit-status
+      # - run: mix dialyzer --halt-exit-status
       - run: mix credo
       - run: mix test
