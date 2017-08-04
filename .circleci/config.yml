@@ -16,6 +16,10 @@ jobs:
       - run: mix deps.get
       - run: mix deps.compile
       - run: mix compile
+      - run:
+          command: mix compile
+          environment:
+            MIX_ENV: test
       - save_cache:
           key: v1-dependency-cache-{{ checksum "mix.lock" }}
           paths:
