@@ -3,7 +3,7 @@ defmodule InvoiceTracker do
   Track invoices and payments.
   """
 
-  alias InvoiceTracker.{Invoice, Repo, TimeTracker}
+  alias InvoiceTracker.{Invoice, Repo, TimeSummary, TimeTracker}
 
   @doc """
   Return a list of all invoices
