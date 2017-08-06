@@ -28,12 +28,13 @@ jobs:
             - ~/.mix
       - restore_cache:
           keys:
-            - v1-plt-cache-{{ checksum "mix.lock" }}
-            - v1-plt-cache
+            - v2-plt-cache-{{ checksum "mix.lock" }}
+            - v2-plt-cache
       - run: mix dialyzer --plt
       - save_cache:
-          key: v1-plt-cache-{{ checksum "mix.lock" }}
+          key: v2-plt-cache-{{ checksum "mix.lock" }}
           paths:
+            - _build
             - ~/.mix
       - run: mix dialyzer --halt-exit-status
       - run: mix credo
