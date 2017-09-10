@@ -2,6 +2,9 @@ defmodule InvoiceReporterTest do
   @moduledoc false
 
   use ExUnit.Case
+
+  import ShortMaps
+
   alias InvoiceTracker.{Invoice, InvoiceReporter}
 
   describe "with no invoices" do
@@ -9,12 +12,12 @@ defmodule InvoiceReporterTest do
       {:ok, invoices: []}
     end
 
-    test "reports that the list is empty", %{invoices: invoices} do
+    test "reports that the list is empty", ~m{invoices}a do
       output = InvoiceReporter.format_list(invoices)
       assert output == "No invoices found\n"
     end
 
-    test "reports that the status report is empty", %{invoices: invoices} do
+    test "reports that the status report is empty", ~m{invoices}a do
       output = InvoiceReporter.format_status(invoices, ~D[2017-03-30])
       assert output == "No active invoices\n"
     end
@@ -35,7 +38,7 @@ defmodule InvoiceReporterTest do
       {:ok, invoices: invoices}
     end
 
-    test "nicely formats the list", %{invoices: invoices} do
+    test "nicely formats the list", ~m{invoices}a do
       output = InvoiceReporter.format_list(invoices)
       assert output == """
       +------------+-----+------------+------------+
@@ -48,7 +51,7 @@ defmodule InvoiceReporterTest do
       """
     end
 
-    test "nicely formats the status report", %{invoices: invoices} do
+    test "nicely formats the status report", ~m{invoices}a do
       output = InvoiceReporter.format_status(invoices, ~D[2017-01-15])
       assert output == """
       +--------------------------------------------------------------------------+
