@@ -3,7 +3,7 @@ defmodule InvoiceTracker.InvoiceReporter do
   Formats a list of invoices into an ASCII table
   """
 
-  import ShortMaps
+  import ShorterMaps
 
   alias InvoiceTracker.Invoice
   alias Number.Delimit
@@ -27,7 +27,7 @@ defmodule InvoiceTracker.InvoiceReporter do
     |> Table.render!
   end
 
-  defp format_list_row(~m{%Invoice date number amount paid_on}a) do
+  defp format_list_row(~M{%Invoice date, number, amount, paid_on}) do
     [date, number, format_amount(amount), paid_on]
   end
 

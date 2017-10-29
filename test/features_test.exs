@@ -3,7 +3,7 @@ defmodule FeaturesTest do
 
   use ExUnit.Case, async: true
 
-  import ShortMaps
+  import ShorterMaps
 
   @moduletag :features
 
@@ -21,7 +21,7 @@ defmodule FeaturesTest do
   end
 
   describe "end to end" do
-    test "shows active invoices in a table", ~m{file}a do
+    test "shows active invoices in a table", ~M{file} do
       assert list_invoices(file) == """
       +------------+-----+----------+------+
       |    Date    |  #  |  Amount  | Paid |
@@ -32,7 +32,7 @@ defmodule FeaturesTest do
       """
     end
 
-    test "shows all recorded invoices in a table", ~m{file}a do
+    test "shows all recorded invoices in a table", ~M{file} do
       assert list_all_invoices(file) == """
       +------------+-----+----------+------------+
       |    Date    |  #  |  Amount  |    Paid    |
@@ -45,7 +45,7 @@ defmodule FeaturesTest do
       """
     end
 
-    test "reports invoice status as of a date", ~m{file}a do
+    test "reports invoice status as of a date", ~M{file} do
       assert invoice_status(file, "2017-03-31", "2017-03-17") === """
       +----------------------------------------------------------------------+
       |                   Invoice status as of 2017-03-31                    |

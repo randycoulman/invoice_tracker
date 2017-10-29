@@ -3,7 +3,7 @@ defmodule TimeReporterTest do
 
   use ExUnit.Case
 
-  import ShortMaps
+  import ShorterMaps
 
   alias InvoiceTracker.{Detail, ProjectTimeSummary, TimeReporter, TimeSummary}
   alias Timex.Duration
@@ -35,7 +35,7 @@ defmodule TimeReporterTest do
       {:ok, [summary: summary]}
     end
 
-    test "nicely formats the summary", ~m{summary}a do
+    test "nicely formats the summary", ~M{summary} do
       output = TimeReporter.format_summary(summary, rate: 100)
       assert output == """
       +-------+-----------------+------+----------+
@@ -49,7 +49,7 @@ defmodule TimeReporterTest do
       """
     end
 
-    test "nicely formats the details", ~m{summary}a do
+    test "nicely formats the details", ~M{summary} do
       output = TimeReporter.format_details(summary)
       assert output == ~S"""
       ## Included

@@ -3,7 +3,7 @@ defmodule TogglResponseTest do
 
   use ExUnit.Case
 
-  import ShortMaps
+  import ShorterMaps
 
   alias InvoiceTracker.{Detail, TogglResponse}
   alias Timex.Duration
@@ -35,11 +35,11 @@ defmodule TogglResponseTest do
     {:ok, summary: summary}
   end
 
-  test "reads total time", ~m{summary}a do
+  test "reads total time", ~M{summary} do
     assert summary.total == Duration.from_milliseconds(123_456_789)
   end
 
-  test "extracts project time entries", ~m{summary}a do
+  test "extracts project time entries", ~M{summary} do
     projects = Enum.map(summary.projects, &(Map.take(&1, [:name, :time])))
     assert projects == [
       %{
@@ -53,7 +53,7 @@ defmodule TogglResponseTest do
     ]
   end
 
-  test "extracts activity details", ~m{summary}a do
+  test "extracts activity details", ~M{summary} do
     assert Enum.flat_map(summary.projects, &(&1.details)) == [
       %Detail{
         activity: "Entry the First",
