@@ -2,6 +2,7 @@ defmodule InvoiceTracker.Invoice do
   @moduledoc """
   A struct for representing individual invoices.
   """
+  import ShorterMaps
 
   defstruct [:number, :amount, :date, :paid_on]
 
@@ -43,7 +44,7 @@ defmodule InvoiceTracker.Invoice do
     !paid?(invoice) || Timex.before?(date, last_activity(invoice))
   end
 
-  defp last_activity(%__MODULE__{paid_on: nil, date: date}), do: date
+  defp last_activity(~M{%__MODULE__ paid_on: nil, date}), do: date
   defp last_activity(invoice), do: invoice.paid_on
 
   @doc """

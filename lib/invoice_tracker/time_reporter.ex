@@ -2,7 +2,7 @@ defmodule InvoiceTracker.TimeReporter do
   @moduledoc """
   Report on the time entries that make up an invoice.
   """
-  import ShortMaps
+  import ShorterMaps
 
   alias InvoiceTracker.{Detail, Rounding, ProjectTimeSummary, TimeSummary}
   alias Number.Delimit
@@ -18,7 +18,7 @@ defmodule InvoiceTracker.TimeReporter do
   This report is suitable for generating the line items on an invoice.
   """
   @spec format_summary(TimeSummary.t, [{:rate, number}]) :: String.t
-  def format_summary(~m{%TimeSummary total projects}a, rate: rate) do
+  def format_summary(~M{%TimeSummary total, projects}, rate: rate) do
     Table.new()
     |> Table.add_rows(project_rows(projects, rate))
     |> Table.put_header(["Hours", "Project", "Rate", "Amount"])
@@ -41,7 +41,7 @@ defmodule InvoiceTracker.TimeReporter do
   accomplished during the invoice period.
   """
   @spec format_details(TimeSummary.t) :: String.t
-  def format_details(~m{%TimeSummary projects}a) do
+  def format_details(~M{%TimeSummary projects}) do
     """
     ## Included
 
@@ -57,7 +57,7 @@ defmodule InvoiceTracker.TimeReporter do
     """ |> String.trim_trailing
   end
 
-  defp detail_line(~m{%Detail activity time}a) do
+  defp detail_line(~M{%Detail activity, time}) do
     "- #{activity} (#{format_hours(time)} hrs)"
   end
 
@@ -65,7 +65,7 @@ defmodule InvoiceTracker.TimeReporter do
     Enum.map(projects, &(project_row(&1, rate)))
   end
 
-  defp project_row(~m{%ProjectTimeSummary name time}a, rate) do
+  defp project_row(~M{%ProjectTimeSummary name, time}, rate) do
     [format_hours(time), name, rate, format_amount(time, rate)]
   end
 

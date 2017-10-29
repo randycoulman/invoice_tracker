@@ -3,7 +3,7 @@ defmodule TimeSummaryTest do
 
   use ExUnit.Case
 
-  import ShortMaps
+  import ShorterMaps
 
   alias InvoiceTracker.{Detail, ProjectTimeSummary, TimeSummary}
   alias Timex.Duration
@@ -35,17 +35,17 @@ defmodule TimeSummaryTest do
   end
 
   describe "rounding" do
-    test "rounds total hours", ~m{summary}a do
+    test "rounds total hours", ~M{summary} do
       assert Duration.to_hours(summary.total) == 7.7
     end
 
     test "rounds and adjusts project hours to match total",
-      %{summary: ~m{projects}a} do
+      %{summary: ~M{projects}} do
         assert Enum.map(projects, &(Duration.to_hours(&1.time))) == [4.1, 3.6]
     end
 
     test "rounds and adjusts detail hours to match rounded project total",
-      %{summary: ~m{projects}a} do
+      %{summary: ~M{projects}} do
       assert Enum.flat_map(projects, fn project ->
         Enum.map(project.details, &(Duration.to_hours(&1.time)))
       end) === [1.3, 2.8, 3.6]
