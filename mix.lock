@@ -22,7 +22,7 @@
   "short_maps": {:hex, :short_maps, "0.1.2", "a7c2bfd91179cdbdfe90e74a023992335d116982fa672612c74776b2e9257a7b", [], [], "hexpm"},
   "shorter_maps": {:hex, :shorter_maps, "2.2.5", "77b2e3632a49c72ca8aea2a47687767b3ad2623b9ade529ffe31f41865a32886", [:mix], [], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.1", "28a4d65b7f59893bc2c7de786dec1e1555bd742d336043fe644ae956c3497fbe", [:make, :rebar], []},
-  "table_rex": {:hex, :table_rex, "0.10.0", "d981954370c00645c32ff7719c105db90ba6a9aa3e951c4d68eaeae3e0bfd40f", [:mix], [], "hexpm"},
+  "table_rex": {:hex, :table_rex, "1.0.0", "587f0668012ceeda1ff62661221d4400ef551c95f1c63d7f78a3168eeee08ca3", [:mix], [], "hexpm"},
   "tesla": {:hex, :tesla, "0.10.0", "e588c7e7f1c0866c81eeed5c38f02a4a94d6309eede336c1e6ca08b0a95abd3f", [:mix], [{:exjsx, ">= 0.1.0", [hex: :exjsx, repo: "hexpm", optional: true]}, {:fuse, "~> 2.4", [hex: :fuse, repo: "hexpm", optional: true]}, {:hackney, "~> 1.6", [hex: :hackney, repo: "hexpm", optional: true]}, {:ibrowse, "~> 4.2", [hex: :ibrowse, repo: "hexpm", optional: true]}, {:mime, "~> 1.0", [hex: :mime, repo: "hexpm", optional: false]}, {:poison, ">= 1.0.0", [hex: :poison, repo: "hexpm", optional: true]}], "hexpm"},
   "timex": {:hex, :timex, "3.1.24", "d198ae9783ac807721cca0c5535384ebdf99da4976be8cefb9665a9262a1e9e3", [:mix], [{:combine, "~> 0.7", [hex: :combine, repo: "hexpm", optional: false]}, {:gettext, "~> 0.10", [hex: :gettext, repo: "hexpm", optional: false]}, {:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, repo: "hexpm", optional: false]}], "hexpm"},
   "tzdata": {:hex, :tzdata, "0.1.201605", "0c4184819b9d6adedcc02107b68321c45d8e853def7a32629b7961b9f2e95f33", [:mix], [], "hexpm"}}
