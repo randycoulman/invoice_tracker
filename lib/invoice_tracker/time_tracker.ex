@@ -7,7 +7,7 @@ defmodule InvoiceTracker.TimeTracker do
 
   use Tesla, only: [:get], docs: false
 
-  @type tracker :: %Tesla.Client{}
+  @type tracker :: Tesla.Client.t
 
   @type option ::
     {:start_date, Date.t} |
