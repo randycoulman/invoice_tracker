@@ -45,9 +45,9 @@ defmodule RoundingTest do
 
   defp round_minutes(minutes) do
     minutes
-    |> Duration.from_minutes
-    |> Rounding.round_time
-    |> Duration.to_hours
+    |> Duration.from_minutes()
+    |> Rounding.round_time()
+    |> Duration.to_hours()
   end
 
   defp reconcile(times, total) do

@@ -50,12 +50,8 @@ defmodule InvoiceTrackerTest do
 
   describe "listing active invoices" do
     test "includes invoices recorded or paid since a given date" do
-      paid_before = make_invoice(
-        number: 42, date: ~D[2017-02-16], paid_on: ~D[2017-03-10]
-      )
-      paid_after = make_invoice(
-        number: 43, date: ~D[2017-03-01], paid_on: ~D[2017-03-30]
-      )
+      paid_before = make_invoice(number: 42, date: ~D[2017-02-16], paid_on: ~D[2017-03-10])
+      paid_after = make_invoice(number: 43, date: ~D[2017-03-01], paid_on: ~D[2017-03-30])
       unpaid = make_invoice(number: 44, date: ~D[2017-03-16])
       issued_after = make_invoice(number: 46, date: ~D[2017-04-01])
       InvoiceTracker.record(paid_before)
@@ -75,9 +71,7 @@ defmodule InvoiceTrackerTest do
     test "returns unpaid invoice with the earliest date" do
       invoice = make_invoice(date: ~D{2017-01-16})
       earlier = make_invoice(number: 41, date: ~D[2017-01-01])
-      earliest_but_paid = make_invoice(
-        number: 40, date: ~D{2016-12-16}, paid_on: ~D{2017-01-18}
-      )
+      earliest_but_paid = make_invoice(number: 40, date: ~D{2016-12-16}, paid_on: ~D{2017-01-18})
       InvoiceTracker.record(invoice)
       InvoiceTracker.record(earliest_but_paid)
       InvoiceTracker.record(earlier)
@@ -111,19 +105,24 @@ defmodule InvoiceTrackerTest do
   end
 
   describe "preparing a time summary" do
-    test_with_mock "infers start and end dates from invoice date",
-        TimeTracker, [summary: fn(_, _) -> %TimeSummary{} end] do
-      InvoiceTracker.time_summary(nil,
+    test_with_mock "infers start and end dates from invoice date", TimeTracker,
+      summary: fn _, _ -> %TimeSummary{} end do
+      InvoiceTracker.time_summary(
+        nil,
         invoice_date: ~D{2017-05-16},
         workspace_id: 1,
         client_id: 2
       )
-      assert called TimeTracker.summary(nil,
-        start_date: ~D{2017-05-01},
-        end_date: ~D{2017-05-15},
-        workspace_id: 1,
-        client_id: 2
-      )
+
+      assert called(
+               TimeTracker.summary(
+                 nil,
+                 start_date: ~D{2017-05-01},
+                 end_date: ~D{2017-05-15},
+                 workspace_id: 1,
+                 client_id: 2
+               )
+             )
     end
   end
 

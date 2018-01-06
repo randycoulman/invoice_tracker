@@ -20,7 +20,7 @@ defmodule InvoiceTracker.Rounding do
   @doc """
   Round a time to the nearest tenth of an hour.
   """
-  @spec round_time(Duration.t) :: Duration.t
+  @spec round_time(Duration.t()) :: Duration.t()
   def round_time(time), do: time |> to_tenths |> round |> from_tenths
 
   @doc """
@@ -29,9 +29,9 @@ defmodule InvoiceTracker.Rounding do
   First rounds the time to the nearest tenth of an hour, then computes the
   charge.
   """
-  @spec charge(Duration.t, number) :: number
+  @spec charge(Duration.t(), number) :: number
   def charge(time, rate) do
-    time |> round_time |> Duration.to_hours |> Kernel.*(rate)
+    time |> round_time |> Duration.to_hours() |> Kernel.*(rate)
   end
 
   @doc """
@@ -47,7 +47,7 @@ defmodule InvoiceTracker.Rounding do
   rounding weight; for adjusting down, take the entries that were furthest from
   rounding up.
   """
-  @spec reconcile([TimeEntry.t], Duration.t) :: [TimeEntry.t]
+  @spec reconcile([TimeEntry.t()], Duration.t()) :: [TimeEntry.t()]
   def reconcile(entries, total) do
     entries
     |> Enum.map(&rounded/1)
@@ -67,14 +67,16 @@ defmodule InvoiceTracker.Rounding do
   end
 
   defp apply_adjustment({entry, adjustment}) do
-    Map.update!(entry, :time, &(Duration.add(&1, adjustment)))
+    Map.update!(entry, :time, &Duration.add(&1, adjustment))
   end
 
   defp raw_adjustments([], _), do: []
+
   defp raw_adjustments(tenths, total) do
-    rounded_total = tenths
-    |> Enum.map(&Kernel.round/1)
-    |> Enum.reduce(&Kernel.+/2)
+    rounded_total =
+      tenths
+      |> Enum.map(&Kernel.round/1)
+      |> Enum.reduce(&Kernel.+/2)
 
     total_adjustment = round(total - rounded_total)
     distribute(total_adjustment, tenths)
@@ -89,10 +91,11 @@ defmodule InvoiceTracker.Rounding do
   end
 
   defp distributions(0, _), do: []
+
   defp distributions(total, tenths) do
     tenths
     |> Enum.map(&rounding_weight/1)
-    |> Enum.with_index
+    |> Enum.with_index()
     |> Enum.sort(&(&1 >= &2))
     |> Enum.take(total)
     |> Enum.map(fn {_, index} -> {index, sign(total)} end)
@@ -112,10 +115,10 @@ defmodule InvoiceTracker.Rounding do
   defp tenths_in(entry), do: entry |> Map.get(:time) |> to_tenths
 
   defp to_tenths(time) do
-    time |> Duration.scale(10) |> Duration.to_hours
+    time |> Duration.scale(10) |> Duration.to_hours()
   end
 
   defp from_tenths(tenths) do
-    tenths |> Duration.from_hours |> Duration.scale(0.1)
+    tenths |> Duration.from_hours() |> Duration.scale(0.1)
   end
 end

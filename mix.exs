@@ -4,15 +4,16 @@ defmodule InvoiceTracker.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :invoice_tracker,
-     version: "0.1.0",
-     elixir: "~> 1.4",
-     escript: [main_module: InvoiceTracker.CLI, name: "invoice"],
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps(),
-     dialyzer: [ignore_warnings: "config/dialyzer.ignore-warnings"]
-   ]
+    [
+      app: :invoice_tracker,
+      version: "0.1.0",
+      elixir: "~> 1.4",
+      escript: [main_module: InvoiceTracker.CLI, name: "invoice"],
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      dialyzer: [ignore_warnings: "config/dialyzer.ignore-warnings"]
+    ]
   end
 
   # Configuration for the OTP application
@@ -36,15 +37,15 @@ defmodule InvoiceTracker.Mixfile do
     [
       {:briefly, "~> 0.3", only: :test},
       {:ex_cli, "~> 0.1.2"},
-      {:credo, "~> 0.6", only: [:dev, :test]},
+      {:credo, "~> 0.8.10", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
       {:mock, "~> 0.3.1", only: :test},
       {:number, "~> 0.5.1"},
       {:poison, "~> 3.1"},
       {:shorter_maps, "~> 2.2"},
-      {:table_rex, "~> 0.10"},
-      {:tesla, "~> 0.9.0"},
+      {:table_rex, "~> 1.0"},
+      {:tesla, "~> 0.10.0"},
       {:timex, "~> 3.1"},
       {:tzdata, "~> 0.1.8", override: true}
     ]

@@ -5,7 +5,7 @@ defprotocol InvoiceTracker.TimeEntry do
 
   alias Timex.Duration
 
-  @spec time(t) :: Duration.t
+  @spec time(t) :: Duration.t()
   def time(entry)
 end
 
@@ -19,7 +19,7 @@ defmodule InvoiceTracker.TimeSummary do
 
   defstruct total: Duration.zero(), projects: []
 
-  @type t :: %__MODULE__{total: Duration.t, projects: [ProjectTimeSummary.t]}
+  @type t :: %__MODULE__{total: Duration.t(), projects: [ProjectTimeSummary.t()]}
 
   defimpl TimeEntry do
     def time(summary), do: summary.total
@@ -42,9 +42,7 @@ defmodule InvoiceTracker.TimeSummary do
   end
 
   defp reconcile_projects(summary) do
-    Map.update!(summary, :projects,
-      &(ProjectTimeSummary.reconciled(&1, summary.total))
-    )
+    Map.update!(summary, :projects, &ProjectTimeSummary.reconciled(&1, summary.total))
   end
 end
 
@@ -60,10 +58,10 @@ defmodule InvoiceTracker.ProjectTimeSummary do
   defstruct name: "", time: Duration.zero(), details: []
 
   @type t :: %__MODULE__{
-    name: String.t,
-    time: Duration.t,
-    details: [Detail.t]
-  }
+          name: String.t(),
+          time: Duration.t(),
+          details: [Detail.t()]
+        }
 
   defimpl TimeEntry do
     def time(summary), do: summary.time
@@ -78,7 +76,7 @@ defmodule InvoiceTracker.ProjectTimeSummary do
   Each project's details are also reconciled and rounded in the same way once
   the projects themselves have been reconciled and rounded.
   """
-  @spec reconciled([t], Duration.t) :: [t]
+  @spec reconciled([t], Duration.t()) :: [t]
   def reconciled(projects, total) do
     projects
     |> Rounding.reconcile(total)
@@ -86,7 +84,7 @@ defmodule InvoiceTracker.ProjectTimeSummary do
   end
 
   defp reconcile_details(project) do
-    Map.update!(project, :details, &(Detail.reconciled(&1, project.time)))
+    Map.update!(project, :details, &Detail.reconciled(&1, project.time))
   end
 end
 
@@ -97,11 +95,12 @@ defmodule InvoiceTracker.Detail do
   """
 
   alias InvoiceTracker.{Rounding, TimeEntry}
+  # credo:disable-for-next-line Credo.Check.Consistency.MultiAliasImportRequireUse
   alias Timex.Duration
 
   defstruct activity: "", time: Duration.zero()
 
-  @type t :: %__MODULE__{activity: String.t, time: Duration.t}
+  @type t :: %__MODULE__{activity: String.t(), time: Duration.t()}
 
   defimpl TimeEntry do
     def time(detail), do: detail.time
@@ -113,6 +112,6 @@ defmodule InvoiceTracker.Detail do
   Times are rounded to the nearest tenth of an hour and then adjusted so that,
   when rounded, they add up to the total (rounded) time.
   """
-  @spec reconciled([t], Duration.t) :: [t]
+  @spec reconciled([t], Duration.t()) :: [t]
   def reconciled(details, total), do: Rounding.reconcile(details, total)
 end
