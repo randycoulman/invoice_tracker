@@ -97,6 +97,7 @@ defmodule InvoiceTracker.Detail do
   """
 
   alias InvoiceTracker.{Rounding, TimeEntry}
+# credo:disable-for-next-line Credo.Check.Consistency.MultiAliasImportRequireUse
   alias Timex.Duration
 
   defstruct activity: "", time: Duration.zero()
