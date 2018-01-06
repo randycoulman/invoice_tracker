@@ -30,11 +30,6 @@
       #
       requires: [],
       #
-      # Credo automatically checks for updates, like e.g. Hex does.
-      # You can disable this behaviour below:
-      #
-      check_for_updates: true,
-      #
       # If you want to enforce a style guide and need a more traditional linting
       # experience, you can change `strict` to `true` below:
       #
@@ -60,13 +55,13 @@
         {Credo.Check.Consistency.SpaceInParentheses},
         {Credo.Check.Consistency.TabsOrSpaces},
 
-        # For some checks, like AliasUsage, you can only customize the priority
+        # You can customize the priority of any check
         # Priority values are: `low, normal, high, higher`
         #
         {Credo.Check.Design.AliasUsage, priority: :low},
 
-        # For others you can set parameters
-
+        # For some checks, you can also set other parameters
+        #
         # If you don't want the `setup` and `test` macro calls in ExUnit tests
         # or the `schema` macro in Ecto schemas to trigger DuplicatedCode, just
         # set the `excluded_macros` parameter to `[:schema, :setup, :test]`.
@@ -79,6 +74,7 @@
         #
         {Credo.Check.Design.TagTODO, exit_status: 2},
         {Credo.Check.Design.TagFIXME},
+
         {Credo.Check.Readability.FunctionNames},
         {Credo.Check.Readability.LargeNumbers},
         {Credo.Check.Readability.MaxLineLength, priority: :low, max_length: 98},
@@ -96,6 +92,7 @@
         {Credo.Check.Readability.VariableNames},
         {Credo.Check.Readability.Semicolons},
         {Credo.Check.Readability.SpaceAfterCommas},
+
         {Credo.Check.Refactor.DoubleBooleanNegation},
         {Credo.Check.Refactor.CondStatements},
         {Credo.Check.Refactor.CyclomaticComplexity},
@@ -107,7 +104,9 @@
         {Credo.Check.Refactor.Nesting},
         {Credo.Check.Refactor.PipeChainStart},
         {Credo.Check.Refactor.UnlessWithElse},
+
         {Credo.Check.Warning.BoolOperationOnSameValues},
+        {Credo.Check.Warning.ExpensiveEmptyEnumCheck},
         {Credo.Check.Warning.IExPry},
         {Credo.Check.Warning.IoInspect},
         {Credo.Check.Warning.LazyLogging},
