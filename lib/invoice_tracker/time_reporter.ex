@@ -17,7 +17,7 @@ defmodule InvoiceTracker.TimeReporter do
 
   This report is suitable for generating the line items on an invoice.
   """
-  @spec format_summary(TimeSummary.t, [{:rate, number}]) :: String.t
+  @spec format_summary(TimeSummary.t(), [{:rate, number}]) :: String.t()
   def format_summary(~M{%TimeSummary total, projects}, rate: rate) do
     Table.new()
     |> Table.add_rows(project_rows(projects, rate))
@@ -25,7 +25,7 @@ defmodule InvoiceTracker.TimeReporter do
     |> Table.put_header_meta(0..3, align: :center)
     |> Table.put_column_meta([0, 2, 3], align: :right)
     |> Table.add_row(total_row(total, rate))
-    |> Table.render!
+    |> Table.render!()
     |> add_footer_separator
   end
 
@@ -40,7 +40,7 @@ defmodule InvoiceTracker.TimeReporter do
   This report is suitable as a starting point for an e-mail outlining the work
   accomplished during the invoice period.
   """
-  @spec format_details(TimeSummary.t) :: String.t
+  @spec format_details(TimeSummary.t()) :: String.t()
   def format_details(~M{%TimeSummary projects}) do
     """
     ## Included
@@ -54,7 +54,8 @@ defmodule InvoiceTracker.TimeReporter do
     ### #{project.name}
 
     #{project.details |> Enum.map(&detail_line/1) |> Enum.join("\n\n")}
-    """ |> String.trim_trailing
+    """
+    |> String.trim_trailing()
   end
 
   defp detail_line(~M{%Detail activity, time}) do
@@ -62,7 +63,7 @@ defmodule InvoiceTracker.TimeReporter do
   end
 
   defp project_rows(projects, rate) do
-    Enum.map(projects, &(project_row(&1, rate)))
+    Enum.map(projects, &project_row(&1, rate))
   end
 
   defp project_row(~M{%ProjectTimeSummary name, time}, rate) do
@@ -76,6 +77,7 @@ defmodule InvoiceTracker.TimeReporter do
   defp add_footer_separator(table) do
     rows = String.split(table, "\n")
     separator = List.first(rows)
+
     rows
     |> List.insert_at(-4, separator)
     |> Enum.join("\n")
@@ -83,7 +85,7 @@ defmodule InvoiceTracker.TimeReporter do
 
   defp format_hours(duration) do
     duration
-    |> Duration.to_hours
+    |> Duration.to_hours()
     |> Delimit.number_to_delimited(precision: 1)
   end
 
