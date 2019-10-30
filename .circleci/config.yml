@@ -2,15 +2,14 @@ version: 2
 jobs:
   build:
     docker:
-      # Bump cache key version below when changing elixir version
-      - image: circleci/elixir:1.5.3
-    # resource_class: medium+
+      # Bump cache key versions below when changing elixir version
+      - image: circleci/elixir:1.6.6
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v3-dependency-cache-{{ checksum "mix.lock" }}
-            - v3-dependency-cache
+            - v4-dependency-cache-{{ checksum "mix.lock" }}
+            - v4-dependency-cache
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: mix deps.get
@@ -21,18 +20,18 @@ jobs:
           environment:
             MIX_ENV: test
       - save_cache:
-          key: v3-dependency-cache-{{ checksum "mix.lock" }}
+          key: v4-dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - deps
             - ~/.mix
       - restore_cache:
           keys:
-            - v3-plt-cache-{{ checksum "mix.lock" }}
-            - v3-plt-cache
+            - v4-plt-cache-{{ checksum "mix.lock" }}
+            - v4-plt-cache
       - run: mix dialyzer --plt
       - save_cache:
-          key: v3-plt-cache-{{ checksum "mix.lock" }}
+          key: v4-plt-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - ~/.mix
