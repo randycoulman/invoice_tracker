@@ -20,7 +20,7 @@ defmodule InvoiceTracker.Repo do
   """
   @spec start_link_with_file(String.t()) :: Agent.on_start()
   def start_link_with_file(filename) do
-    {:ok, table} = :dets.open_file(filename, access: :read_write)
+    {:ok, table} = :dets.open_file(:invoices, file: to_charlist(filename))
     start_link(fn -> {:dets, table} end)
   end
 
@@ -58,8 +58,9 @@ defmodule InvoiceTracker.Repo do
   @spec store(Invoice.t()) :: :ok
   def store(invoice), do: Agent.update(@agent, &do_store(&1, invoice))
 
-  defp do_store({storage, table}, invoice) do
+  defp do_store({storage, table} = state, invoice) do
     storage.insert(table, {key(invoice), invoice})
+    sync(state)
     {storage, table}
   end
 
@@ -76,6 +77,12 @@ defmodule InvoiceTracker.Repo do
     {:ok, invoice} = do_find(state, number)
     do_store(state, updater.(invoice))
   end
+
+  defp sync({:dets, table}) do
+    :dets.sync(table)
+  end
+
+  defp sync(state), do: state
 
   defp key(invoice), do: invoice.number
 end
