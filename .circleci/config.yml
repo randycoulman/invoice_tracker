@@ -3,13 +3,13 @@ jobs:
   build:
     docker:
       # Bump cache key versions below when changing elixir version
-      - image: circleci/elixir:1.8.2
+      - image: circleci/elixir:1.9.2
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v5-dependency-cache-{{ checksum "mix.lock" }}
-            - v5-dependency-cache
+            - v6-dependency-cache-{{ checksum "mix.lock" }}
+            - v6-dependency-cache
       - run: mix local.hex --force
       - run: mix local.rebar --force
       - run: mix deps.get
@@ -20,18 +20,18 @@ jobs:
           environment:
             MIX_ENV: test
       - save_cache:
-          key: v5-dependency-cache-{{ checksum "mix.lock" }}
+          key: v6-dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - deps
             - ~/.mix
       - restore_cache:
           keys:
-            - v5-plt-cache-{{ checksum "mix.lock" }}
-            - v5-plt-cache
+            - v6-plt-cache-{{ checksum "mix.lock" }}
+            - v6-plt-cache
       - run: mix dialyzer --plt
       - save_cache:
-          key: v5-plt-cache-{{ checksum "mix.lock" }}
+          key: v6-plt-cache-{{ checksum "mix.lock" }}
           paths:
             - _build
             - ~/.mix
