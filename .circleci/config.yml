@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # Bump cache key versions below when changing elixir version
-      - image: circleci/elixir:1.7.4-otp-21
+      - image: circleci/elixir:1.7.4
     steps:
       - checkout
       - restore_cache:
