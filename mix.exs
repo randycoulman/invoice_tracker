@@ -39,13 +39,13 @@ defmodule InvoiceTracker.Mixfile do
       {:credo, "~> 1.1", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:ex_cli, "~> 0.1.6"},
+      {:jason, "~> 1.1"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:mock, "~> 0.3.3", only: :test},
       {:number, "~> 1.0"},
-      {:poison, "~> 3.1"},
       {:shorter_maps, "~> 2.2"},
       {:table_rex, "~> 2.0"},
-      {:tesla, "~> 0.10.0"},
+      {:tesla, "~> 1.3"},
       {:timex, "~> 3.1"},
       {:tzdata, "~> 0.1.8", override: true}
     ]
