@@ -36,17 +36,17 @@ defmodule InvoiceTracker.Mixfile do
   defp deps do
     [
       {:briefly, "~> 0.3", only: :test},
-      {:ex_cli, "~> 0.1.2"},
-      {:credo, "~> 0.8.10", only: [:dev, :test]},
+      {:credo, "~> 1.1", only: [:dev, :test]},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
+      {:ex_cli, "~> 0.1.6"},
+      {:jason, "~> 1.1"},
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
       {:mock, "~> 0.3.3", only: :test},
-      {:number, "~> 0.5.1"},
-      {:poison, "~> 3.1"},
+      {:number, "~> 1.0"},
       {:shorter_maps, "~> 2.2"},
-      {:table_rex, "~> 1.0"},
-      {:tesla, "~> 0.10.0"},
-      {:timex, "~> 3.1"},
+      {:table_rex, "~> 2.0"},
+      {:tesla, "~> 1.3"},
+      {:timex, "~> 3.6"},
       {:tzdata, "~> 0.1.8", override: true}
     ]
   end

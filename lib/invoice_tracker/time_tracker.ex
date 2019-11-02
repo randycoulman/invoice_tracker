@@ -5,11 +5,11 @@ defmodule InvoiceTracker.TimeTracker do
 
   alias InvoiceTracker.{TimeSummary, TogglResponse}
 
-  use Tesla, only: [:get], docs: false
+  use Tesla, docs: false
 
   @type tracker :: Tesla.Client.t()
 
-  @type option ::
+  @type setting ::
           {:start_date, Date.t()}
           | {:end_date, Date.t()}
           | {:workspace_id, String.t()}
@@ -29,8 +29,8 @@ defmodule InvoiceTracker.TimeTracker do
   def client(api_token) do
     encoded_token = Base.encode64("#{api_token}:api_token")
 
-    Tesla.build_client([
-      {Tesla.Middleware.Headers, %{"Authorization" => "Basic #{encoded_token}"}}
+    Tesla.client([
+      {Tesla.Middleware.Headers, [{"Authorization", "Basic #{encoded_token}"}]}
     ])
   end
 
@@ -40,7 +40,7 @@ defmodule InvoiceTracker.TimeTracker do
   - `time_tracker` is an authenticated client for the time-tracking service,
     created with `client/1`.
   """
-  @spec summary(tracker, [option]) :: TimeSummary.t()
+  @spec summary(tracker, [setting]) :: TimeSummary.t()
   def summary(
         time_tracker,
         start_date: start_date,
@@ -55,9 +55,10 @@ defmodule InvoiceTracker.TimeTracker do
       until: Date.to_iso8601(end_date)
     ]
 
-    time_tracker
-    |> get("/summary", query: query)
-    |> Map.get(:body)
-    |> TogglResponse.to_summary()
+    with {:ok, env} <- get(time_tracker, "/summary", query: query) do
+      env
+      |> Map.get(:body)
+      |> TogglResponse.to_summary()
+    end
   end
 end

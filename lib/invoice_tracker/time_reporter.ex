@@ -4,7 +4,7 @@ defmodule InvoiceTracker.TimeReporter do
   """
   import ShorterMaps
 
-  alias InvoiceTracker.{Detail, Rounding, ProjectTimeSummary, TimeSummary}
+  alias InvoiceTracker.{Detail, ProjectTimeSummary, Rounding, TimeSummary}
   alias Number.Delimit
   alias TableRex.Table
   alias Timex.Duration
