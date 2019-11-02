@@ -44,7 +44,7 @@ defmodule InvoiceTracker.Mixfile do
       {:number, "~> 1.0"},
       {:poison, "~> 3.1"},
       {:shorter_maps, "~> 2.2"},
-      {:table_rex, "~> 1.0"},
+      {:table_rex, "~> 2.0"},
       {:tesla, "~> 0.10.0"},
       {:timex, "~> 3.1"},
       {:tzdata, "~> 0.1.8", override: true}
