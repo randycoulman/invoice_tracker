@@ -46,7 +46,7 @@ defmodule InvoiceTracker.Mixfile do
       {:shorter_maps, "~> 2.2"},
       {:table_rex, "~> 2.0"},
       {:tesla, "~> 1.3"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.6"},
       {:tzdata, "~> 0.1.8", override: true}
     ]
   end
