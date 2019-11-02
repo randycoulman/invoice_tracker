@@ -25,7 +25,18 @@ You can override the defaults on the command-line.
 
 In order to run this application, you will need to have a recent version of Elixir installed (along with Erlang, since Elixir runs on the Erlang VM).  I use [asdf](https://github.com/asdf-vm/asdf) to manage both Erlang and Elixir installation.
 
-After cloning the repository, run `MIX_ENV=prod mix escript.build` to build the application, then copy `invoice` somewhere on your path.
+After cloning the repository:
+
+- make a `.tzdata` directory
+- copy `deps/tzdata/priv/release_ets` to `.tzdata`
+- run `MIX_ENV=prod mix escript.build` to build the application, then copy
+  `invoice` somewhere on your path.
+
+The first two steps are needed because the `tzdata` library needs to access its
+timezone database, which normally lives in its `priv` directory.  However, [this
+doesn't currently work in an escript](https://github.com/lau/tzdata/issues/24).
+So, we copy the timezone database to a different directory (which has been
+pre-configured in `config/config.exs`) instead.
 
 ## Usage
 
