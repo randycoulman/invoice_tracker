@@ -114,15 +114,15 @@ defmodule InvoiceTrackerTest do
         client_id: 2
       )
 
-      assert called(
-               TimeTracker.summary(
-                 nil,
-                 start_date: ~D{2017-05-01},
-                 end_date: ~D{2017-05-15},
-                 workspace_id: 1,
-                 client_id: 2
-               )
-             )
+      assert_called(
+        TimeTracker.summary(
+          nil,
+          start_date: ~D{2017-05-01},
+          end_date: ~D{2017-05-15},
+          workspace_id: 1,
+          client_id: 2
+        )
+      )
     end
   end
 
