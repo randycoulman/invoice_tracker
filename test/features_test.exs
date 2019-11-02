@@ -17,12 +17,12 @@ defmodule FeaturesTest do
     record_invoice(file, "1322.28", "2017-03-16")
     record_payment(file, "99", "2017-03-20")
     record_payment(file, "2017-02-15")
-    {:ok, file: file}
+    {:ok, invoice_file: file}
   end
 
   describe "end to end" do
-    test "shows active invoices in a table", ~M{file} do
-      assert list_invoices(file) == """
+    test "shows active invoices in a table", ~M{invoice_file} do
+      assert list_invoices(invoice_file) == """
              +------------+-----+----------+------+
              |    Date    |  #  |  Amount  | Paid |
              +------------+-----+----------+------+
@@ -32,8 +32,8 @@ defmodule FeaturesTest do
              """
     end
 
-    test "shows all recorded invoices in a table", ~M{file} do
-      assert list_all_invoices(file) == """
+    test "shows all recorded invoices in a table", ~M{invoice_file} do
+      assert list_all_invoices(invoice_file) == """
              +------------+-----+----------+------------+
              |    Date    |  #  |  Amount  |    Paid    |
              +------------+-----+----------+------------+
@@ -45,8 +45,8 @@ defmodule FeaturesTest do
              """
     end
 
-    test "reports invoice status as of a date", ~M{file} do
-      assert invoice_status(file, "2017-03-31", "2017-03-17") === """
+    test "reports invoice status as of a date", ~M{invoice_file} do
+      assert invoice_status(invoice_file, "2017-03-31", "2017-03-17") === """
              +----------------------------------------------------------------------+
              |                   Invoice status as of 2017-03-31                    |
              +------------+-----+----------+------------+------------+--------------+
