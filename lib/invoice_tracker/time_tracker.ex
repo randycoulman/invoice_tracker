@@ -15,9 +15,9 @@ defmodule InvoiceTracker.TimeTracker do
           | {:workspace_id, String.t()}
           | {:client_id, String.t()}
 
-  plug(Tesla.Middleware.BaseUrl, "https://www.toggl.com/reports/api/v2")
-  plug(Tesla.Middleware.Query, user_agent: "https://github.com/randycoulman/invoice_tracker")
-  plug(Tesla.Middleware.JSON)
+  plug Tesla.Middleware.BaseUrl, "https://www.toggl.com/reports/api/v2"
+  plug Tesla.Middleware.Query, user_agent: "https://github.com/randycoulman/invoice_tracker"
+  plug Tesla.Middleware.JSON
 
   @doc """
   Returns an authenticated client for the time-tracking service.

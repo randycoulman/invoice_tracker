@@ -22,39 +22,33 @@ defmodule InvoiceTracker.CLI do
   @config_file "~/.invoicerc"
   @default_invoice_file "invoices.ets"
 
-  name("invoice")
-  description("Invoice tracker")
+  name "invoice"
+  description "Invoice tracker"
 
-  long_description(~s"""
+  long_description ~s"""
   invoice records invoices and payments and produces a report of
   paid and unpaid invoices.
-  """)
+  """
 
-  option(
-    :file,
+  option :file,
     help: "The invoice data file to use",
     aliases: [:f]
-  )
 
   command :record do
-    aliases([:rec, :r])
-    description("Records an invoice")
+    aliases [:rec, :r]
+    description "Records an invoice"
 
-    argument(:amount, type: :float)
+    argument :amount, type: :float
 
-    option(
-      :date,
+    option :date,
       help: "The invoice date",
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
-    )
 
-    option(
-      :number,
+    option :number,
       help: "The invoice number (default is next highest number)",
       aliases: [:n],
       type: :integer
-    )
 
     run initial_context do
       config()
@@ -76,54 +70,40 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :generate do
-    aliases([:gen, :g])
-    description("Generates an invoice (eventually)")
+    aliases [:gen, :g]
+    description "Generates an invoice (eventually)"
 
-    option(
-      :api_token,
+    option :api_token,
       help: "The Toggl API token to use",
       aliases: [:t]
-    )
 
-    option(
-      :workspace_id,
+    option :workspace_id,
       help: "The id of the workspace containing the time entries",
       aliases: [:w]
-    )
 
-    option(
-      :client_id,
+    option :client_id,
       help: "The id of the client to invoice",
       aliases: [:c]
-    )
 
-    option(
-      :date,
+    option :date,
       help: "The invoice date",
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
-    )
 
-    option(
-      :number,
+    option :number,
       help: "The invoice number (default is next highest number)",
       aliases: [:n],
       type: :integer
-    )
 
-    option(
-      :rate,
+    option :rate,
       help: "The hourly rate to charge",
       aliases: [:r]
-    )
 
-    option(
-      :save,
+    option :save,
       help: "Record the generated invoice",
       aliases: [:s],
       type: :boolean,
       default: false
-    )
 
     run initial_context do
       context = Map.merge(config(), initial_context)
@@ -160,22 +140,18 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :payment do
-    aliases([:pay, :p])
-    description("Records a payment")
+    aliases [:pay, :p]
+    description "Records a payment"
 
-    option(
-      :number,
+    option :number,
       help: "The invoice number (default: oldest unpaid)",
       aliases: [:n],
       type: :integer
-    )
 
-    option(
-      :date,
+    option :date,
       help: "The invoice date (default: today)",
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
-    )
 
     run initial_context do
       context = Map.merge(config(), initial_context)
@@ -186,16 +162,14 @@ defmodule InvoiceTracker.CLI do
   end
 
   command :list do
-    aliases([:ls, :l])
-    description("List invoices")
+    aliases [:ls, :l]
+    description "List invoices"
 
-    option(
-      :all,
+    option :all,
       help: "List all invoices (default: show unpaid only)",
       aliases: [:a],
       default: false,
       type: :boolean
-    )
 
     run initial_context do
       context = Map.merge(config(), initial_context)
@@ -213,22 +187,18 @@ defmodule InvoiceTracker.CLI do
   defp selected_invoices(_), do: InvoiceTracker.unpaid()
 
   command :status do
-    aliases([:stat, :st, :s])
-    description("Show an invoice status report")
+    aliases [:stat, :st, :s]
+    description "Show an invoice status report"
 
-    option(
-      :date,
+    option :date,
       help: "Show status as of this date (default: most recent Friday)",
       aliases: [:d],
       process: &__MODULE__.process_date_option/3
-    )
 
-    option(
-      :since,
+    option :since,
       help: "Include activity since this date (default: 1 week ago)",
       aliases: [:s],
       process: &__MODULE__.process_date_option/3
-    )
 
     run initial_context do
       context = Map.merge(config(), initial_context)
