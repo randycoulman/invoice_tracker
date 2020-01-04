@@ -1,9 +1,10 @@
+alias InvoiceTracker.{Detail, ProjectTimeSummary, Rounding, TimeEntry}
+alias Timex.Duration
+
 defprotocol InvoiceTracker.TimeEntry do
   @doc """
   Returns the time for the entry
   """
-
-  alias Timex.Duration
 
   @spec time(t) :: Duration.t()
   def time(entry)
@@ -13,9 +14,6 @@ defmodule InvoiceTracker.TimeSummary do
   @moduledoc """
   A struct that summarizes time entries for an invoice period.
   """
-
-  alias InvoiceTracker.{ProjectTimeSummary, Rounding, TimeEntry}
-  alias Timex.Duration
 
   defstruct total: Duration.zero(), projects: []
 
@@ -51,9 +49,6 @@ defmodule InvoiceTracker.ProjectTimeSummary do
   A struct that summarizes time entries for a single project for an
   invoice period.
   """
-
-  alias InvoiceTracker.{Detail, Rounding, TimeEntry}
-  alias Timex.Duration
 
   defstruct name: "", time: Duration.zero(), details: []
 
@@ -93,10 +88,6 @@ defmodule InvoiceTracker.Detail do
   A struct that represents a project activity detail entry for an
   invoice period.
   """
-
-  alias InvoiceTracker.{Rounding, TimeEntry}
-  # credo:disable-for-next-line Credo.Check.Consistency.MultiAliasImportRequireUse
-  alias Timex.Duration
 
   defstruct activity: "", time: Duration.zero()
 
